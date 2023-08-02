@@ -17,9 +17,7 @@ const App = () => {
   useEffect(() => {
     const registry = getRegistry();
     registry.register({ notifications: notificationsReducer as Reducer });
-    insights.chrome.init();
 
-    insights.chrome.identifyApp('starter');
     const unregister = on('APP_NAVIGATION', (event) => history.push(`/${event.navId}`));
     return () => {
       unregister?.();

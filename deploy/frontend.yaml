@@ -15,7 +15,7 @@ objects:
         paths:
           - /apps/in-place-upgrades
       image: ${IMAGE}:${IMAGE_TAG}
-      navItems: 
+      navItems:
       - appId: in-place-upgrades
         title: In-Place Upgrades
         href: "/insights/in-place-upgrades"
@@ -24,7 +24,7 @@ objects:
         modules:
           - id: "in-place-upgrades"
             module: "./RootApp"
-            routes: 
+            routes:
             - pathname: "/insights/in-place-upgrades"
 
 parameters:
