@@ -1,17 +1,6 @@
-# Description
+**JIRA-ISSUE-KEY**
 
-Associated Jira ticket: # (issue)
-
-Please include a summary of the change, what this fixes/creates/improves.
-
-# How to test the PR
-
-Please include steps to test your PR.
-
-# Dependent work link
-
-
-# Checklist:
+*Please include a summary of the change, what this fixes/creates/improves and any other neccessary information for reviewer.*
 
 - [ ] PR has a short description
 - [ ] Tests for the changes have been added
