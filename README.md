@@ -1,3 +1,7 @@
+![tests](https://github.com/RedHatInsights/in-place-upgrades-frontend/actions/workflows/tests.yml/badge.svg)
+[![codecov](https://codecov.io/github/RedHatInsights/in-place-upgrades-frontend/branch/main/graph/badge.svg?token=WXB9W9E9ZU)](https://codecov.io/github/RedHatInsights/in-place-upgrades-frontend)
+
+
 # In-place Upgrades frontend for Insights
 
 User friendly experience for all customers who want to perform in-place upgrades on console.redhat.com.
