@@ -20,7 +20,7 @@ const SamplePage = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    insights?.chrome?.appAction?.('in-place-upgrades');
+    insights?.chrome?.appAction?.('upgrades');
   }, []);
 
   const handleAlert = () => {

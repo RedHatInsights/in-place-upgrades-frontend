@@ -1,5 +1,5 @@
 module.exports = {
-  appUrl: ['/insights/in-place-upgrades'],
+  appUrl: ['/insights/upgrades'],
   debug: true,
   useProxy: true,
   proxyVerbose: true,
