@@ -43,3 +43,5 @@ Then follow [these steps](https://github.com/RedHatInsights/chrome-service-backe
 ### Testing
 
 `npm run verify` will run `npm run lint` (eslint) and `npm test` (Jest)
+
+There is also pre-commit in place that runs lint and test (set up via [husky](https://github.com/typicode/husky)).
