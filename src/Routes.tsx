@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 
 import { Bullseye, Spinner } from '@patternfly/react-core';
 
@@ -15,7 +15,7 @@ const SamplePage = lazy(() => import(/* webpackChunkName: "SamplePage" */ './Rou
  *      path - https://prod.foo.redhat.com:1337/insights/advisor/rules
  *      component - component to be rendered when a route has been chosen.
  */
-const Routes = () => (
+const CustomRoutes = () => (
   <Suspense
     fallback={
       <Bullseye>
@@ -23,19 +23,19 @@ const Routes = () => (
       </Bullseye>
     }
   >
-    <Switch>
-      <Route path="/" component={SamplePage} />
+    <Routes>
+      <Route path="/" element={<SamplePage />} />
 
       {/* NOTE: Use below routes for reference for 500 and 403 */}
-      {/* <Route path="/" component={OopsPage} /> */}
-      {/* <Route path="/" component={NoPermissionsPage} /> */}
+      {/* <Route path="/" element={<OopsPage />} /> */}
+      {/* <Route path="/" element={<NoPermissionsPage />} /> */}
 
       {/* NOTE: Finally, catch all unmatched routes */}
       {/* <Route>
         <Redirect to="/" />
       </Route> */}
-    </Switch>
+    </Routes>
   </Suspense>
 );
 
-export default Routes;
+export default CustomRoutes;

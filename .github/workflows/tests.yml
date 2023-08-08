@@ -41,5 +41,5 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - run: npm install
-      - run: npm run build
+      - run: npm run build | tee /dev/stderr | grep  "ERROR" | test $(wc -l) -eq 0
 
