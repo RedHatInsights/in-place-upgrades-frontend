@@ -12,9 +12,10 @@ import { useChrome } from '@redhat-cloud-services/frontend-components/useChrome'
 
 const App = () => {
   const navigate = useNavigate();
-  const { on } = useChrome();
+  const { on, updateDocumentTitle } = useChrome();
 
   useEffect(() => {
+    updateDocumentTitle('Upgrades | Red Hat Insights');
     const registry = getRegistry();
     registry.register({ notifications: notificationsReducer as Reducer });
 
