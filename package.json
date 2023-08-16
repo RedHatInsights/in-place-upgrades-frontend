@@ -67,7 +67,7 @@
     "stylelint-config-recommended-scss": "^12.0.0",
     "stylelint-scss": "5.1.0",
     "typescript": "^5.1.6",
-    "webpack-bundle-analyzer": "4.4.2"
+    "webpack-bundle-analyzer": "4.9.0"
   },
   "insights": {
     "appname": "upgrades"
