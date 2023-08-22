@@ -7,6 +7,7 @@
     "allowSyntheticDefaultImports": true,
     "noErrorTruncation": true,
     "strict": true,
+    "noImplicitAny": false,
     "rootDir": ".",
     "skipLibCheck": true,
     "lib": [
@@ -20,7 +21,7 @@
   },
   "include": [
     "./src/**/*.ts",
-    "./src/**/*.tsx"
+    "./src/**/*.tsx",
   ],
   "exclude": [
     "./src/entry.ts",

@@ -6,6 +6,8 @@ import { PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-com
 import { Button, Popover, Tab, TabAction, TabTitleText, Tabs, Text, TextContent } from '@patternfly/react-core';
 import { ExternalLinkAltIcon, HelpIcon } from '@patternfly/react-icons';
 
+import InventoryPage from '../InventoryPage/InventoryPage';
+
 import './LandingPage.scss';
 
 /**
@@ -105,7 +107,9 @@ export const LandingPage = () => {
             />
           }
         >
-          <section className="pf-l-page__main-section pf-c-page__main-section">TODO: Content Inventory</section>
+          <section className="pf-l-page__main-section pf-c-page__main-section">
+            <InventoryPage />
+          </section>
         </Tab>
         <Tab eventKey={1} title={<TabTitleText>Pre-upgrade</TabTitleText>}>
           <section className="pf-l-page__main-section pf-c-page__main-section">TODO: Content Preupgrade</section>
