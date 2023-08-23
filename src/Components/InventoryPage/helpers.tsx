@@ -6,10 +6,7 @@ import { Reducer } from 'redux';
 
 const buildSortString = (orderBy: string, orderDirection: string): string => {
   const sortString = orderBy ? '&sort=' : '';
-  let direction = '';
-  if (orderDirection === 'DESC') {
-    direction = '-';
-  }
+  const direction = orderDirection === 'DESC' ? '-' : '';
   const order = orderBy === 'updated' ? 'last_seen' : orderBy;
 
   return `${sortString}${direction}${order}`;
@@ -17,7 +14,6 @@ const buildSortString = (orderBy: string, orderDirection: string): string => {
 
 const buildFilterString = (filters: SystemFilters): string => {
   const displayNameFilter = filters.hostnameOrId ? `&display_name=${filters.hostnameOrId}` : '';
-
   const osFilter = filters.osFilter?.length ? '&os_version=' + filters.osFilter.join(',') : '';
 
   return `${displayNameFilter}${osFilter}`;
@@ -72,12 +68,10 @@ export const systemColumns = (isBeta: boolean): SystemColumn[] => [
   },
 ];
 
-export const defaultOnLoad = (columns, getRegistry: () => ReducerRegistry<Reducer>) => {
-  return ({ INVENTORY_ACTION_TYPES, mergeWithEntities }) =>
+export const defaultOnLoad = (getRegistry: () => ReducerRegistry<Reducer>) => {
+  return ({ mergeWithEntities }) =>
     getRegistry().register({
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      //@ts-ignore
-      ...mergeWithEntities(entitiesReducer(INVENTORY_ACTION_TYPES, columns), {
+      ...mergeWithEntities(entitiesReducer(), {
         page: 1,
         perPage: 10,
         sortBy: {

@@ -1,7 +1,7 @@
 import { buildFilterSortString } from './helpers';
 import { fetchSystems } from '../../api';
 
-export const useGetEntities = (onComplete: (result) => void, { selectedIds }: { selectedIds?: string[] } = {}) => {
+export const useGetEntities = (onComplete: (result) => void, { selectedIds }: { selectedIds?: number[] } = {}) => {
   return async (_items, config) => {
     const { page, per_page: perPage, orderBy, orderDirection, filters } = config;
     const limit = perPage;

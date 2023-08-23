@@ -23,6 +23,7 @@ export const LandingPage = () => {
   const tabPath = pathname.split('/').pop() || '';
   const initialActiveTabKey = tabsPath.indexOf(tabPath) >= 0 ? tabsPath.indexOf(tabPath) : 0;
   const [activeTabKey, setActiveTabKey] = useState(initialActiveTabKey);
+  const [selectedSystems, setSelectedSystems] = useState([] as string[]);
 
   useEffect(() => {
     insights?.chrome?.appAction?.('upgrades');
@@ -108,7 +109,7 @@ export const LandingPage = () => {
           }
         >
           <section className="pf-l-page__main-section pf-c-page__main-section">
-            <InventoryPage />
+            <InventoryPage selectedIds={selectedSystems} setSelectedIds={setSelectedSystems} />
           </section>
         </Tab>
         <Tab eventKey={1} title={<TabTitleText>Pre-upgrade</TabTitleText>}>
