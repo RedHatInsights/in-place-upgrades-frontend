@@ -8,7 +8,12 @@ import { InventoryTable } from '@redhat-cloud-services/frontend-components/Inven
 import useChrome from '@redhat-cloud-services/frontend-components/useChrome';
 import { SystemColumn } from './types';
 import { useDispatch } from 'react-redux';
+import { useRbac } from '../../Helpers/Hooks';
+import { PERMISSIONS } from '../../Helpers/constants';
+import { NotAuthorized } from '@redhat-cloud-services/frontend-components/NotAuthorized';
 import { fetchSystems } from '../../api';
+
+import './InventoryPage.scss';
 
 export const InventoryPage = ({ selectedIds, setSelectedIds }) => {
   const chrome = useChrome();
@@ -16,8 +21,11 @@ export const InventoryPage = ({ selectedIds, setSelectedIds }) => {
   const inventory = useRef(null);
   const { getRegistry } = useContext(RegistryContext);
 
+  const [activeFiltersString, setActiveFiltersString] = useState('');
+  const [isBulkLoading, setBulkLoading] = useState(false);
   const [items, setItems] = useState([]);
   const [total, setTotal] = useState(0 as number);
+  const [[canReadHostsInventory], isLoadingInventory] = useRbac([PERMISSIONS.readHosts], 'inventory');
 
   useEffect(() => {
     dispatch({ type: 'INVENTORY_INIT' });
@@ -36,9 +44,10 @@ export const InventoryPage = ({ selectedIds, setSelectedIds }) => {
     });
   }, [selectedIds]);
 
-  const onComplete = (result) => {
-    setTotal(result?.meta?.count);
-    setItems(result?.data);
+  const onComplete = (result, filtersString: string) => {
+    setTotal(result.total);
+    setItems(result.results);
+    setActiveFiltersString(filtersString);
   };
 
   const getEntities = useGetEntities(onComplete, {
@@ -69,6 +78,7 @@ export const InventoryPage = ({ selectedIds, setSelectedIds }) => {
   const bulkSelectIds = async (type: string, options?) => {
     const newSelectedIds = [...selectedIds];
 
+    setBulkLoading(true);
     switch (type) {
       case 'none': {
         setSelectedIds([]);
@@ -87,14 +97,24 @@ export const InventoryPage = ({ selectedIds, setSelectedIds }) => {
       }
 
       case 'all': {
-        const results = await fetchSystems(`?limit=${options.total}&offset=0`);
-        setSelectedIds(results.data.map(({ id }) => id));
+        const ids = [] as string[];
+        const perPage = 100;
+        for (let page = 1; page <= Math.ceil(total / perPage); page++) {
+          const { results: pageResults } = await fetchSystems(`?per_page=100&page=${page}${activeFiltersString}`);
+          ids.push(...pageResults.map(({ id }) => id));
+        }
+        setSelectedIds(ids);
         break;
       }
     }
+    setBulkLoading(false);
   };
 
-  return (
+  return isLoadingInventory ? (
+    <Bullseye>
+      <Spinner />
+    </Bullseye>
+  ) : canReadHostsInventory ? (
     <InventoryTable
       isFullView
       autoRefresh
@@ -122,7 +142,6 @@ export const InventoryPage = ({ selectedIds, setSelectedIds }) => {
       bulkSelect={{
         id: 'systems-bulk-select',
         isDisabled: !total,
-        count: selectedIds.length,
         items: [
           {
             title: `Select none (0)`,
@@ -151,8 +170,21 @@ export const InventoryPage = ({ selectedIds, setSelectedIds }) => {
           }
         },
         checked: items && selectedIds ? findCheckedValue(total, selectedIds.length) : null,
+        toggleProps: {
+          'data-ouia-component-type': 'bulk-select-toggle-button',
+          children: isBulkLoading
+            ? [
+                <React.Fragment key="sd">
+                  <Spinner size="sm" />
+                  {` ${selectedIds.length} selected `}
+                </React.Fragment>,
+              ]
+            : `${selectedIds.length} selected `,
+        },
       }}
     />
+  ) : (
+    <NotAuthorized serviceName="Upgrades" />
   );
 };
 

@@ -4,26 +4,27 @@ import { SystemColumn, SystemFilters } from './types';
 import ReducerRegistry from '@redhat-cloud-services/frontend-components-utilities/ReducerRegistry';
 import { Reducer } from 'redux';
 
-const buildSortString = (orderBy: string, orderDirection: string): string => {
-  const sortString = orderBy ? '&sort=' : '';
-  const direction = orderDirection === 'DESC' ? '-' : '';
-  const order = orderBy === 'updated' ? 'last_seen' : orderBy;
-
-  return `${sortString}${direction}${order}`;
+export const buildAditionalFields = (fields: string[]): string => {
+  return fields.length ? `&fields[system_profile][]=${fields.join(',')}` : '';
 };
 
-const buildFilterString = (filters: SystemFilters): string => {
+export const buildSortString = (orderBy: string, orderDirection: string): string => {
+  const order = orderBy ? `&order_by=${orderBy}` : '';
+  const orderHow = orderBy && orderDirection ? `&order_how=${orderDirection}` : '';
+
+  return `${order}${orderHow}`;
+};
+
+export const buildFilterString = (filters: SystemFilters): string => {
   const displayNameFilter = filters.hostnameOrId ? `&display_name=${filters.hostnameOrId}` : '';
-  const osFilter = filters.osFilter?.length ? '&os_version=' + filters.osFilter.join(',') : '';
+  const osFilter = filters.osFilter?.length ? '&filter[system_profile][operating_system][RHEL][version][eq][]=' + filters.osFilter.join(',') : '';
 
   return `${displayNameFilter}${osFilter}`;
 };
 
-export const buildFilterSortString = (limit: number, offset: number, orderBy: string, orderDirection: string, filters: SystemFilters) => {
-  const limitOffsetString = `limit=${limit}&offset=${offset}`;
-  const sortString = buildSortString(orderBy, orderDirection);
-  const filterString = buildFilterString(filters);
-  return `?${limitOffsetString}${sortString}${filterString}`;
+export const buildPerPagePageString = (perPage: number, page: number): string => {
+  const limitOffsetString = `&per_page=${perPage}&page=${page}`;
+  return limitOffsetString;
 };
 
 export const findCheckedValue = (total: number, selected: number): boolean | null => {
@@ -37,7 +38,13 @@ export const findCheckedValue = (total: number, selected: number): boolean | nul
 };
 
 const createSystemLink = (id: string, name: string, keyData: string, isBetaEnv: boolean): JSX.Element => (
-  <a rel="noreferrer" target="_blank" key={keyData} href={isBetaEnv ? `/preview/insights/inventory/${id}` : `/insights/inventory/${id}`}>
+  <a
+    className="name-column"
+    rel="noreferrer"
+    target="_blank"
+    key={keyData}
+    href={isBetaEnv ? `/preview/insights/inventory/${id}` : `/insights/inventory/${id}`}
+  >
     {name}
   </a>
 );
@@ -57,10 +64,14 @@ export const systemColumns = (isBeta: boolean): SystemColumn[] => [
     title: 'Tags',
   },
   {
-    key: 'os_version',
-    sortKey: 'os_version',
+    key: 'system_profile',
+    sortKey: 'operating_system',
     props: { width: 10 },
     title: 'OS',
+    renderFunc: ({ operating_system }) => {
+      const { name, major, minor } = operating_system || {};
+      return name ? <p>{`${name} ${major}.${minor}`}</p> : <p>Not available</p>;
+    },
   },
   {
     key: 'updated',

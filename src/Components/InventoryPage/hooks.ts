@@ -1,23 +1,32 @@
-import { buildFilterSortString } from './helpers';
-import { fetchSystems } from '../../api';
+import { buildAditionalFields, buildFilterString, buildPerPagePageString, buildSortString } from './helpers';
+import { fetchSystems, fetchSystemsTags } from '../../api';
 
-export const useGetEntities = (onComplete: (result) => void, { selectedIds }: { selectedIds?: number[] } = {}) => {
+export const useGetEntities = (onComplete: (result, filtersString) => void, { selectedIds }: { selectedIds?: number[] } = {}) => {
   return async (_items, config) => {
     const { page, per_page: perPage, orderBy, orderDirection, filters } = config;
-    const limit = perPage;
-    const offset = page * perPage - perPage;
-    const filterSortString = buildFilterSortString(limit, offset, orderBy, orderDirection, filters);
-    const fetchedEntities = await fetchSystems(filterSortString);
 
-    const {
-      data,
-      meta: { count },
-    } = fetchedEntities || {};
+    const sortString = buildSortString(orderBy, orderDirection);
+    const filtersString = buildFilterString(filters);
+    const perPageString = buildPerPagePageString(perPage, page);
+    const aditionalFieldsString = buildAditionalFields(['operating_system', 'system_update_method']);
+    const finalFilterSortString = `?${perPageString}${sortString}${filtersString}${aditionalFieldsString}`;
 
-    onComplete && onComplete(fetchedEntities);
+    const fetchedEntities = await fetchSystems(finalFilterSortString);
+    const fetchedTags = await fetchSystemsTags(
+      fetchedEntities.results.map((entity) => entity.id),
+      `?per_page=${perPage}${sortString}`
+    );
+
+    fetchedEntities.results.forEach((entity) => {
+      entity.tags = fetchedTags?.results[entity.id] || [];
+    });
+
+    const { results, total } = fetchedEntities || {};
+
+    onComplete && onComplete(fetchedEntities, filtersString);
 
     return {
-      results: data.map((entity) => ({
+      results: results.map((entity) => ({
         ...entity,
         selected: (selectedIds || []).map((id) => id).includes(entity.id),
       })),
@@ -25,7 +34,7 @@ export const useGetEntities = (onComplete: (result) => void, { selectedIds }: { 
       perPage,
       orderBy,
       orderDirection,
-      total: count,
+      total: total,
     };
   };
 };

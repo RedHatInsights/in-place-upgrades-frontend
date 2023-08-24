@@ -5,7 +5,7 @@ export declare type SystemColumn = {
     width: number;
   };
   title: string;
-  renderFunc?: (name: string, id: string) => JSX.Element;
+  renderFunc?: (value, id: string) => JSX.Element;
 };
 
 export declare type SystemFilters = {
