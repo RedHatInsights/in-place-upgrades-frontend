@@ -21,7 +21,7 @@
     "prepare": "husky install"
   },
   "dependencies": {
-    "@patternfly/react-core": "^4.239.0",
+    "@patternfly/react-core": "^4.276.12",
     "@patternfly/react-table": "^4.108.0",
     "@redhat-cloud-services/frontend-components": "^3.11.5",
     "@redhat-cloud-services/frontend-components-notifications": "^3.2.16",
