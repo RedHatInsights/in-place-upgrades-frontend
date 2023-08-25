@@ -44,7 +44,7 @@
     "@babel/preset-typescript": "^7.17.12",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.11",
     "@redhat-cloud-services/eslint-config-redhat-cloud-services": "^1.2.3",
-    "@redhat-cloud-services/frontend-components-config": "^5.1.1",
+    "@redhat-cloud-services/frontend-components-config": "^6.0.2",
     "@testing-library/jest-dom": "^6.1.1",
     "@testing-library/react": "^12.1.2",
     "@types/react": "17.0.39",
