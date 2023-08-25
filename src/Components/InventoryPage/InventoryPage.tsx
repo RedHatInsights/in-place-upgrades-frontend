@@ -96,10 +96,22 @@ export const InventoryPage = ({ selectedIds, setSelectedIds }) => {
         break;
       }
 
+      case 'page-none': {
+        options.items.forEach((item) => {
+          if (newSelectedIds.includes(item.id)) {
+            newSelectedIds.splice(newSelectedIds.indexOf(item.id), 1);
+          }
+        });
+
+        setSelectedIds(newSelectedIds);
+        break;
+      }
+
       case 'all': {
         const ids = [] as string[];
         const perPage = 100;
-        for (let page = 1; page <= Math.ceil(total / perPage); page++) {
+        const totalPages = Math.ceil(total / perPage);
+        for (let page = 1; page <= totalPages; page++) {
           const { results: pageResults } = await fetchSystems(`?per_page=100&page=${page}${activeFiltersString}`);
           ids.push(...pageResults.map(({ id }) => id));
         }
@@ -163,13 +175,14 @@ export const InventoryPage = ({ selectedIds, setSelectedIds }) => {
           },
         ],
         onSelect: () => {
-          if (selectedIds.length) {
-            bulkSelectIds('none');
+          const allOnPageSelected = findCheckedValue(items, selectedIds);
+          if (allOnPageSelected) {
+            bulkSelectIds('page-none', { items: items });
           } else {
-            bulkSelectIds('all', { total: total });
+            bulkSelectIds('page', { items: items });
           }
         },
-        checked: items && selectedIds ? findCheckedValue(total, selectedIds.length) : null,
+        checked: items && selectedIds ? findCheckedValue(items, selectedIds) : null,
         toggleProps: {
           'data-ouia-component-type': 'bulk-select-toggle-button',
           children: isBulkLoading

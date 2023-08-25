@@ -27,14 +27,13 @@ export const buildPerPagePageString = (perPage: number, page: number): string =>
   return limitOffsetString;
 };
 
-export const findCheckedValue = (total: number, selected: number): boolean | null => {
-  if (selected === total && total > 0) {
-    return true;
-  } else if (selected > 0 && selected < total) {
-    return null;
-  } else {
-    return false;
-  }
+export const findCheckedValue = (items, selectedIds: string[]): boolean | null => {
+  const selectedLength = selectedIds?.length;
+  const allOnPageSelected = items.every((item) => selectedIds.includes(item.id));
+  const anyOnPageSelected = items.some((item) => selectedIds.includes(item.id));
+  if (allOnPageSelected && selectedLength) return true;
+  else if (anyOnPageSelected && selectedLength) return null;
+  else return false;
 };
 
 const createSystemLink = (id: string, name: string, keyData: string, isBetaEnv: boolean): JSX.Element => (
@@ -53,7 +52,7 @@ export const systemColumns = (isBeta: boolean): SystemColumn[] => [
   {
     key: 'display_name',
     sortKey: 'display_name',
-    props: { width: 20 },
+    props: { width: 40 },
     title: 'Name',
     renderFunc: (name, id) => {
       return createSystemLink(id, name, `system-name-${id}`, isBeta);
