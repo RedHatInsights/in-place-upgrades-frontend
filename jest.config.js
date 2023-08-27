@@ -4,9 +4,11 @@ module.exports = {
   coverageDirectory: './coverage/',
   moduleNameMapper: {
     '\\.(css|scss)$': 'identity-obj-proxy',
+    '^lodash-es$': 'lodash',
+    '^uuid$': 'uuid'
   },
   roots: ['<rootDir>/src/'],
-  transformIgnorePatterns: ['/node_modules/(?!@redhat-cloud-services)', '/node_modules/(?!@patternfly)'],
+  transformIgnorePatterns: ['node_modules/(?!@patternfly|lodash-es|@openshift|@redhat-cloud-services)'],
   testEnvironment: 'jest-environment-jsdom',
   moduleDirectories: [
     'node_modules',

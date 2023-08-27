@@ -4,8 +4,13 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import LandingPage from './LandingPage';
 import '@testing-library/jest-dom';
 import { BrowserRouter } from 'react-router-dom';
+import configureStore from 'redux-mock-store';
+import { Provider } from 'react-redux';
 
 test('expect to render title and clicable tabs', () => {
+  let mockStore = configureStore();
+  let props;
+  const store = mockStore(props);
   const mockUsedNavigate = jest.fn();
   jest.mock('react-router-dom', () => ({
     ...jest.requireActual('react-router-dom'),
@@ -20,9 +25,11 @@ test('expect to render title and clicable tabs', () => {
   };
 
   render(
-    <BrowserRouter>
-      <LandingPage />
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <LandingPage />
+      </BrowserRouter>
+    </Provider>
   );
   expect(screen.getByRole('heading')).toHaveTextContent('Upgrades');
 
