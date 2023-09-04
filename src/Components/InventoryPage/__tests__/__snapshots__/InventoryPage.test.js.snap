@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`InventoryTable should render correctly 1`] = `
+<DocumentFragment>
+  <div>
+    <h1>
+      Inventory mock
+    </h1>
+  </div>
+</DocumentFragment>
+`;

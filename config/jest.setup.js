@@ -1,8 +1,11 @@
 import React from 'react';
 import '@testing-library/jest-dom';
 
-global.React = React;
-global.window = Object.create(window);
+global.console = {
+  ...console,
+  error: jest.fn(),
+};
+
 global.window.insights = {
   ...(window.insights || {}),
   chrome: {
@@ -37,23 +40,23 @@ global.window.__scalprum__ = {
       module: 'inventory#./RootApp',
       name: 'inventory',
     },
-  },
-  factories: {
-    inventory: {
-      expiration: new Date('01-01-3000'),
-      modules: {
-        './InventoryTable': {
-          __esModule: true,
-          default: () => (
-            <div>
-              <h1>Inventory mock</h1>
-            </div>
-          ),
-        },
-      },
+    remediations: {
+      manifestLocation: 'https://console.stage.redhat.com/apps/remediations/fed-mods.json?ts=1643875037626',
+      module: 'remediations#./RemediationButton',
+      name: 'remediations',
     },
   },
 };
+
+jest.mock('@redhat-cloud-services/frontend-components/Inventory', () => {
+  return {
+    InventoryTable: () => (
+      <div>
+        <h1>Inventory mock</h1>
+      </div>
+    ),
+  };
+});
 
 jest.mock('@redhat-cloud-services/frontend-components/useChrome', () => ({
   __esModule: true,

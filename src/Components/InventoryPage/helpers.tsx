@@ -17,7 +17,10 @@ export const buildSortString = (orderBy: string, orderDirection: string): string
 
 export const buildFilterString = (filters: SystemFilters): string => {
   const displayNameFilter = filters.hostnameOrId ? `&display_name=${filters.hostnameOrId}` : '';
-  const osFilter = filters.osFilter?.length ? '&filter[system_profile][operating_system][RHEL][version][eq][]=' + filters.osFilter.join(',') : '';
+  let osFilter = '';
+  filters.osFilter?.forEach((os) => {
+    osFilter += `&filter[system_profile][operating_system][RHEL][version][eq][]=${os}`;
+  });
 
   return `${displayNameFilter}${osFilter}`;
 };
