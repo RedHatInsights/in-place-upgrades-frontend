@@ -12,24 +12,20 @@ export const useGetEntities = (onComplete: (result, filtersString) => void, { se
     const finalFilterSortString = `?${perPageString}${sortString}${filtersString}${aditionalFieldsString}`;
 
     const fetchedEntities = await fetchSystems(finalFilterSortString);
-    const fetchedTags = await fetchSystemsTags(
-      fetchedEntities.results.map((entity) => entity.id),
-      `?per_page=${perPage}${sortString}`
-    );
-
-    fetchedEntities.results.forEach((entity) => {
-      entity.tags = fetchedTags?.results[entity.id] || [];
-    });
+    const ids = fetchedEntities?.results?.map((entity) => entity.id) || [];
+    const fetchedTags = ids.length > 0 ? await fetchSystemsTags(ids, `?per_page=${perPage}${sortString}`) : null;
 
     const { results, total } = fetchedEntities || {};
 
     onComplete && onComplete(fetchedEntities, filtersString);
 
     return {
-      results: results.map((entity) => ({
-        ...entity,
-        selected: (selectedIds || []).map((id) => id).includes(entity.id),
-      })),
+      results:
+        results?.map((entity) => ({
+          ...entity,
+          selected: (selectedIds || []).map((id) => id).includes(entity.id),
+          tags: fetchedTags?.results[entity.id] || [],
+        })) || [],
       page,
       perPage,
       orderBy,

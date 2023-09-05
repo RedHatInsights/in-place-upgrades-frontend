@@ -1,7 +1,7 @@
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 
-import LandingPage from './LandingPage';
+import LandingPage from '../LandingPage';
 import '@testing-library/jest-dom';
 import { BrowserRouter } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
@@ -16,13 +16,6 @@ test('expect to render title and clicable tabs', () => {
     ...jest.requireActual('react-router-dom'),
     useNavigate: () => mockUsedNavigate,
   }));
-
-  // Mock global insights variable (ChromeAPI)
-  global.insights = {
-    chrome: {
-      appAction: () => null,
-    },
-  };
 
   render(
     <Provider store={store}>

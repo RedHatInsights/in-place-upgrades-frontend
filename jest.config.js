@@ -1,11 +1,11 @@
 module.exports = {
   collectCoverage: true,
-  collectCoverageFrom: ['src/**/*.tsx', '!src/**/stories/*'],
+  collectCoverageFrom: ['src/**/*.(ts|tsx)', '!src/**/stories/*', '!src/**/index.ts', '!src/*.(ts|tsx)'],
   coverageDirectory: './coverage/',
   moduleNameMapper: {
     '\\.(css|scss)$': 'identity-obj-proxy',
     '^lodash-es$': 'lodash',
-    '^uuid$': 'uuid'
+    '^uuid$': 'uuid',
   },
   roots: ['<rootDir>/src/'],
   transformIgnorePatterns: ['node_modules/(?!@patternfly|lodash-es|@openshift|@redhat-cloud-services)'],

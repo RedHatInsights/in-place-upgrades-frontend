@@ -45,8 +45,8 @@ export const InventoryPage = ({ selectedIds, setSelectedIds }) => {
   }, [selectedIds]);
 
   const onComplete = (result, filtersString: string) => {
-    setTotal(result.total);
-    setItems(result.results);
+    setTotal(result.total || 0);
+    setItems(result.results || []);
     setActiveFiltersString(filtersString);
   };
 
