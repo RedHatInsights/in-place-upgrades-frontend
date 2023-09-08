@@ -1,4 +1,5 @@
 import React from 'react';
+import { Text, TextContent } from '@patternfly/react-core';
 import { entitiesReducer } from '../../store/index';
 import { SystemColumn, SystemFilters } from './types';
 import ReducerRegistry from '@redhat-cloud-services/frontend-components-utilities/ReducerRegistry';
@@ -40,15 +41,18 @@ export const findCheckedValue = (items, selectedIds: string[]): boolean | null =
 };
 
 const createSystemLink = (id: string, name: string, keyData: string, isBetaEnv: boolean): JSX.Element => (
-  <a
-    className="name-column"
-    rel="noreferrer"
-    target="_blank"
-    key={keyData}
-    href={isBetaEnv ? `/preview/insights/inventory/${id}` : `/insights/inventory/${id}`}
-  >
-    {name}
-  </a>
+  <TextContent>
+    <Text
+      component="a"
+      key={keyData}
+      className="name-column"
+      href={isBetaEnv ? `/preview/insights/inventory/${id}` : `/insights/inventory/${id}`}
+      rel="noreferrer"
+      target="_blank"
+    >
+      {name}
+    </Text>
+  </TextContent>
 );
 
 export const systemColumns = (isBeta: boolean): SystemColumn[] => [

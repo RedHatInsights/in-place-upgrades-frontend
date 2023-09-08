@@ -1,4 +1,4 @@
-import { useRbac } from '../Hooks';
+import { useRbac } from '../hooks';
 import { PERMISSIONS } from '../constants';
 import { renderHook } from '@testing-library/react-hooks';
 

@@ -7,6 +7,7 @@ import { Button, Popover, Tab, TabAction, TabTitleText, Tabs, Text, TextContent 
 import { ExternalLinkAltIcon, HelpIcon } from '@patternfly/react-icons';
 
 import InventoryPage from '../InventoryPage/InventoryPage';
+import TasksPage from '../TasksPage/TasksPage';
 
 import './LandingPage.scss';
 
@@ -113,13 +114,17 @@ export const LandingPage = () => {
           </section>
         </Tab>
         <Tab eventKey={1} title={<TabTitleText>Pre-upgrade</TabTitleText>}>
-          <section className="pf-l-page__main-section pf-c-page__main-section">TODO: Content Preupgrade</section>
+          <section className="pf-l-page__main-section pf-c-page__main-section">
+            <TasksPage slug={'leapp-preupgrade'} />
+          </section>
         </Tab>
         <Tab eventKey={2} title={<TabTitleText>Remediations</TabTitleText>}>
           <section className="pf-l-page__main-section pf-c-page__main-section">TODO: Content Remediations</section>
         </Tab>
         <Tab eventKey={3} title={<TabTitleText>Upgrade</TabTitleText>}>
-          <section className="pf-l-page__main-section pf-c-page__main-section">TODO: Content Upgrade</section>
+          <section className="pf-l-page__main-section pf-c-page__main-section">
+            <TasksPage slug={'leapp-upgrade'} />
+          </section>
         </Tab>
         <Tab eventKey={4} isDisabled title={<TabTitleText>Post-upgrade</TabTitleText>}>
           <section className="pf-l-page__main-section pf-c-page__main-section">TODO: Content Post-upgrade</section>
