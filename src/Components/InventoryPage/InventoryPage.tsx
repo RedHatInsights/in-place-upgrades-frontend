@@ -139,7 +139,7 @@ export const InventoryPage = ({ selectedIds, setSelectedIds }: InventoryPageProp
         ref={inventory}
         fallback={
           <Bullseye>
-            <Spinner isSVG />
+            <Spinner />
           </Bullseye>
         }
         onLoad={defaultOnLoad(getRegistry)}
@@ -187,7 +187,7 @@ export const InventoryPage = ({ selectedIds, setSelectedIds }: InventoryPageProp
             children: isBulkLoading
               ? [
                   <React.Fragment key="sd">
-                    <Spinner isSVG size="sm" />
+                    <Spinner size="sm" />
                     {` ${selectedIds.length} selected `}
                   </React.Fragment>,
                 ]

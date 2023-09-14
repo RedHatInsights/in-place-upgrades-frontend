@@ -1,6 +1,6 @@
 import { useRbac } from '../hooks';
 import { PERMISSIONS } from '../constants';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook, waitFor } from '@testing-library/react';
 
 jest.mock('@redhat-cloud-services/frontend-components/useChrome', () => ({
   __esModule: true,
@@ -11,21 +11,19 @@ jest.mock('@redhat-cloud-services/frontend-components/useChrome', () => ({
 
 describe('useRbac', () => {
   it('should return correct values', async () => {
-    const { result, waitForNextUpdate } = renderHook(() => useRbac([PERMISSIONS.readHosts], 'inventory'));
+    const { result } = renderHook(() => useRbac([PERMISSIONS.readHosts], 'inventory'));
+
     expect(result.current).toEqual([[[]], true]);
-    await waitForNextUpdate();
-    expect(result.current).toEqual([[true], false]);
+    await waitFor(() => expect(result.current).toEqual([[true], false]));
   });
 
   it('should work using wildcard * (all) permission', async () => {
-    const { result: result1, waitForNextUpdate: wait1 } = renderHook(() => useRbac(['blob:read'], 'inventory'));
+    const { result: result1 } = renderHook(() => useRbac(['blob:read'], 'inventory'));
     expect(result1.current).toEqual([[[]], true]);
-    await wait1();
-    expect(result1.current).toEqual([[true], false]);
+    await waitFor(() => expect(result1.current).toEqual([[true], false]));
 
-    const { result: result2, waitForNextUpdate: wait2 } = renderHook(() => useRbac(['test:*']));
+    const { result: result2 } = renderHook(() => useRbac(['test:*']));
     expect(result2.current).toEqual([[[]], true]);
-    await wait2();
-    expect(result2.current).toEqual([[true], false]);
+    await waitFor(() => expect(result2.current).toEqual([[true], false]));
   });
 });

@@ -146,7 +146,7 @@ const HelpPopover = ({ header, body }: HelpPopoverPropTypes) => {
       <TabAction ref={ref}>
         <HelpIcon />
       </TabAction>
-      <Popover minWidth="35rem" headerContent={header} bodyContent={body} reference={ref} />
+      <Popover minWidth="35rem" headerContent={header} bodyContent={body} triggerRef={ref} />
     </>
   );
 };
