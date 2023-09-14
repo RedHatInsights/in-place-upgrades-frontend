@@ -6,8 +6,8 @@ import configureStore from 'redux-mock-store';
 
 import InventoryPage from '../InventoryPage';
 import { useGetEntities } from '../hooks';
-import { findCheckedValue } from '../helpers';
-import { useRbac } from '../../../Helpers/Hooks';
+import { findCheckedValue } from '../Helpers';
+import { useRbac } from '../../../Helpers/hooks';
 
 const systemsMock = {
   total: 2,
@@ -67,12 +67,12 @@ const systemTags = {
 
 jest.mock('../../../api', () => {
   return {
-    fetchSystems: jest.fn(() => Promise.resolve(systemsMock)),
-    fetchSystemsTags: jest.fn(() => Promise.resolve(systemTags)),
+    inventoryFetchSystems: jest.fn(() => Promise.resolve(systemsMock)),
+    inventoryFetchSystemsTags: jest.fn(() => Promise.resolve(systemTags)),
   };
 });
 
-jest.mock('../../../Helpers/Hooks');
+jest.mock('../../../Helpers/hooks');
 
 describe('InventoryTable', () => {
   let mockStore = configureStore();

@@ -1,21 +1,24 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import propTypes from 'prop-types';
 import { Bullseye, Spinner } from '@patternfly/react-core';
 import { useGetEntities } from './hooks';
-import { defaultOnLoad, findCheckedValue, systemColumns } from './helpers';
+import { defaultOnLoad, findCheckedValue, systemColumns } from './Helpers';
 import { RegistryContext } from '../../store';
 import { InventoryTable } from '@redhat-cloud-services/frontend-components/Inventory';
 import useChrome from '@redhat-cloud-services/frontend-components/useChrome';
 import { SystemColumn } from './types';
 import { useDispatch } from 'react-redux';
-import { useRbac } from '../../Helpers/Hooks';
-import { PERMISSIONS } from '../../Helpers/constants';
-import { NotAuthorized } from '@redhat-cloud-services/frontend-components/NotAuthorized';
-import { fetchSystems } from '../../api';
+import { PERMISSIONS, SERVICES } from '../../Helpers/constants';
+import { inventoryFetchSystems } from '../../api';
 
 import './InventoryPage.scss';
+import WithPermission from '../Customs/WithPermisson';
 
-export const InventoryPage = ({ selectedIds, setSelectedIds }) => {
+type InventoryPageProps = {
+  selectedIds: string[];
+  setSelectedIds: (selectedIds: string[]) => void;
+};
+
+export const InventoryPage = ({ selectedIds, setSelectedIds }: InventoryPageProps) => {
   const chrome = useChrome();
   const dispatch = useDispatch();
   const inventory = useRef(null);
@@ -25,7 +28,6 @@ export const InventoryPage = ({ selectedIds, setSelectedIds }) => {
   const [isBulkLoading, setBulkLoading] = useState(false);
   const [items, setItems] = useState([]);
   const [total, setTotal] = useState(0 as number);
-  const [[canReadHostsInventory], isLoadingInventory] = useRbac([PERMISSIONS.readHosts], 'inventory');
 
   useEffect(() => {
     dispatch({ type: 'INVENTORY_INIT' });
@@ -112,7 +114,7 @@ export const InventoryPage = ({ selectedIds, setSelectedIds }) => {
         const perPage = 100;
         const totalPages = Math.ceil(total / perPage);
         for (let page = 1; page <= totalPages; page++) {
-          const { results: pageResults } = await fetchSystems(`?per_page=100&page=${page}${activeFiltersString}`);
+          const { results: pageResults } = await inventoryFetchSystems(`?per_page=100&page=${page}${activeFiltersString}`);
           ids.push(...pageResults.map(({ id }) => id));
         }
         setSelectedIds(ids);
@@ -122,88 +124,79 @@ export const InventoryPage = ({ selectedIds, setSelectedIds }) => {
     setBulkLoading(false);
   };
 
-  return isLoadingInventory ? (
-    <Bullseye>
-      <Spinner />
-    </Bullseye>
-  ) : canReadHostsInventory ? (
-    <InventoryTable
-      isFullView
-      autoRefresh
-      showTags
-      hideFilters={{
-        all: true,
-        name: false,
-        operatingSystem: false,
-      }}
-      columns={mergedColumns}
-      ref={inventory}
-      fallback={
-        <Bullseye>
-          <Spinner />
-        </Bullseye>
-      }
-      onLoad={defaultOnLoad(getRegistry)}
-      getEntities={getEntities}
-      tableProps={{
-        isStickyHeader: true,
-        isStriped: true,
-        canSelectAll: false,
-        onSelect: items.length ? selectIds : null,
-      }}
-      bulkSelect={{
-        id: 'systems-bulk-select',
-        isDisabled: !total,
-        items: [
-          {
-            title: `Select none (0)`,
-            onClick: () => {
-              bulkSelectIds('none');
+  return (
+    <WithPermission serviceName={SERVICES.inventory} requiredPermissions={[PERMISSIONS.readHosts]}>
+      <InventoryTable
+        isFullView
+        autoRefresh
+        showTags
+        hideFilters={{
+          all: true,
+          name: false,
+          operatingSystem: false,
+        }}
+        columns={mergedColumns}
+        ref={inventory}
+        fallback={
+          <Bullseye>
+            <Spinner isSVG />
+          </Bullseye>
+        }
+        onLoad={defaultOnLoad(getRegistry)}
+        getEntities={getEntities}
+        tableProps={{
+          isStickyHeader: true,
+          isStriped: true,
+          canSelectAll: false,
+          onSelect: items.length ? selectIds : null,
+        }}
+        bulkSelect={{
+          id: 'systems-bulk-select',
+          isDisabled: !total,
+          items: [
+            {
+              title: `Select none (0)`,
+              onClick: () => {
+                bulkSelectIds('none');
+              },
             },
-          },
-          {
-            title: `Select page (${items?.length || 0})`,
-            onClick: () => {
+            {
+              title: `Select page (${items?.length || 0})`,
+              onClick: () => {
+                bulkSelectIds('page', { items: items });
+              },
+            },
+            {
+              title: `Select all (${total || 0})`,
+              onClick: () => {
+                bulkSelectIds('all', { total: total });
+              },
+            },
+          ],
+          onSelect: () => {
+            const allOnPageSelected = findCheckedValue(items, selectedIds);
+            if (allOnPageSelected) {
+              bulkSelectIds('page-none', { items: items });
+            } else {
               bulkSelectIds('page', { items: items });
-            },
+            }
           },
-          {
-            title: `Select all (${total || 0})`,
-            onClick: () => {
-              bulkSelectIds('all', { total: total });
-            },
+          checked: items && selectedIds ? findCheckedValue(items, selectedIds) : null,
+          toggleProps: {
+            'data-ouia-component-type': 'bulk-select-toggle-button',
+            children: isBulkLoading
+              ? [
+                  <React.Fragment key="sd">
+                    <Spinner isSVG size="sm" />
+                    {` ${selectedIds.length} selected `}
+                  </React.Fragment>,
+                ]
+              : `${selectedIds.length} selected `,
           },
-        ],
-        onSelect: () => {
-          const allOnPageSelected = findCheckedValue(items, selectedIds);
-          if (allOnPageSelected) {
-            bulkSelectIds('page-none', { items: items });
-          } else {
-            bulkSelectIds('page', { items: items });
-          }
-        },
-        checked: items && selectedIds ? findCheckedValue(items, selectedIds) : null,
-        toggleProps: {
-          'data-ouia-component-type': 'bulk-select-toggle-button',
-          children: isBulkLoading
-            ? [
-                <React.Fragment key="sd">
-                  <Spinner size="sm" />
-                  {` ${selectedIds.length} selected `}
-                </React.Fragment>,
-              ]
-            : `${selectedIds.length} selected `,
-        },
-      }}
-    />
-  ) : (
-    <NotAuthorized serviceName="Upgrades" />
+        }}
+      />
+    </WithPermission>
   );
-};
-
-InventoryPage.propTypes = {
-  selectedIds: propTypes.arrayOf(propTypes.string),
-  setSelectedIds: propTypes.func,
 };
 
 export default InventoryPage;

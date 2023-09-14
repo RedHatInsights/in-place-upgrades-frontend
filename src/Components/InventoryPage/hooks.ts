@@ -1,7 +1,7 @@
-import { buildAditionalFields, buildFilterString, buildPerPagePageString, buildSortString } from './helpers';
-import { fetchSystems, fetchSystemsTags } from '../../api';
+import { buildAditionalFields, buildFilterString, buildPerPagePageString, buildSortString } from './Helpers';
+import { inventoryFetchSystems, inventoryFetchSystemsTags } from '../../api';
 
-export const useGetEntities = (onComplete: (result, filtersString) => void, { selectedIds }: { selectedIds?: number[] } = {}) => {
+export const useGetEntities = (onComplete: (result, filtersString) => void, { selectedIds }: { selectedIds?: string[] } = {}) => {
   return async (_items, config) => {
     const { page, per_page: perPage, orderBy, orderDirection, filters } = config;
 
@@ -11,9 +11,9 @@ export const useGetEntities = (onComplete: (result, filtersString) => void, { se
     const aditionalFieldsString = buildAditionalFields(['operating_system', 'system_update_method']);
     const finalFilterSortString = `?${perPageString}${sortString}${filtersString}${aditionalFieldsString}`;
 
-    const fetchedEntities = await fetchSystems(finalFilterSortString);
+    const fetchedEntities = await inventoryFetchSystems(finalFilterSortString);
     const ids = fetchedEntities?.results?.map((entity) => entity.id) || [];
-    const fetchedTags = ids.length > 0 ? await fetchSystemsTags(ids, `?per_page=${perPage}${sortString}`) : null;
+    const fetchedTags = ids.length > 0 ? await inventoryFetchSystemsTags(ids, `?per_page=${perPage}${sortString}`) : null;
 
     const { results, total } = fetchedEntities || {};
 
