@@ -11,7 +11,7 @@ module.exports = {
    * Add additional webpack plugins
    */
   plugins: [],
-  _unstableHotReload: process.env.HOT === 'true',
+  hotReload: process.env.HOT === 'true',
 
   // NOTE: This is here for local testing purposes
   // remove it when you want to use deployed chrome-service,

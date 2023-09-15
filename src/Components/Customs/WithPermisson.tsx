@@ -1,6 +1,6 @@
 import React from 'react';
 import { useRbac } from '../../Helpers/hooks';
-import { NotAuthorized } from '@redhat-cloud-services/frontend-components/NotAuthorized';
+import NotAuthorized from '@redhat-cloud-services/frontend-components/NotAuthorized';
 import { Bullseye, Spinner } from '@patternfly/react-core';
 
 type WithPermissionProps = {
@@ -18,7 +18,7 @@ const WithPermission = ({ children, serviceName, requiredPermissions }: WithPerm
   } else {
     return (
       <Bullseye>
-        <Spinner isSVG />
+        <Spinner />
       </Bullseye>
     );
   }
