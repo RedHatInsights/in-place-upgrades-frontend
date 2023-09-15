@@ -23,8 +23,7 @@ export const TasksTable = ({ slug }: TasksTableProps) => {
 
   const fetchData = (page, perPage, sortIndex, sortDirection) => {
     setIsLoadingExecutedTasks(true);
-    // TODO: add slug
-    tasksFetchExecutedTasks('', createPath(page, perPage, sortIndex, sortDirection)).then((fetchedExecutedTasks) => {
+    tasksFetchExecutedTasks(slug, createPath(page, perPage, sortIndex, sortDirection)).then((fetchedExecutedTasks) => {
       setExecutedTasks(fetchedExecutedTasks.data);
       setTotal(fetchedExecutedTasks.meta.count);
       setIsLoadingExecutedTasks(false);
