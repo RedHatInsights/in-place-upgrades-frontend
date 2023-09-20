@@ -1,11 +1,13 @@
+import '@testing-library/jest-dom';
+
 import React from 'react';
+import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
 import { fireEvent, render, screen } from '@testing-library/react';
 
-import LandingPage from '../LandingPage';
-import '@testing-library/jest-dom';
-import { BrowserRouter } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
-import { Provider } from 'react-redux';
+
+import LandingPage from '../LandingPage';
 
 test('expect to render title and clicable tabs', () => {
   let mockStore = configureStore();

@@ -1,9 +1,10 @@
 import React, { useContext, useState } from 'react';
-import { RegistryContext } from '../../store';
 import { Alert, Button, Flex, FlexItem, Modal, Text, TextContent, TextVariants } from '@patternfly/react-core';
+
+import { isError, tasksExecuteTask } from '../../api';
 import { INFO_ALERT_SYSTEMS, TASKS_API_ROOT, TASKS_AVAILABLE_ROOT } from '../../Helpers/constants';
 import { tasksExecuteErrorNotif, tasksExecuteSucessNotif } from '../../Helpers/Helpers';
-import { isError, tasksExecuteTask } from '../../api';
+import { RegistryContext } from '../../store';
 import InventoryPage from '../InventoryPage/InventoryPage';
 
 export const RunTaskModal = ({ isOpen, setIsOpen, title, description, slug }) => {

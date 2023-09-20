@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
+
 import AppEntry from './AppEntry';
 
 function EntryWithCallback() {

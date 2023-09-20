@@ -1,9 +1,11 @@
 import React from 'react';
 import { Text, TextContent } from '@patternfly/react-core';
+import ReducerRegistry from '@redhat-cloud-services/frontend-components-utilities/ReducerRegistry';
+
+import { Reducer } from 'redux';
+
 import { entitiesReducer } from '../../store/index';
 import { SystemColumn, SystemFilters } from './types';
-import ReducerRegistry from '@redhat-cloud-services/frontend-components-utilities/ReducerRegistry';
-import { Reducer } from 'redux';
 
 export const buildAditionalFields = (fields: string[]): string => {
   return fields.length ? `&fields[system_profile][]=${fields.join(',')}` : '';

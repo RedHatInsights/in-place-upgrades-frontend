@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { ActionsColumn, ExpandableRowContent, Table, Tbody, Td, Th, ThProps, Thead, Tr } from '@patternfly/react-table';
 import { Button, Grid, GridItem, Icon, Pagination, Skeleton, Text, TextContent, Toolbar, ToolbarContent, ToolbarItem } from '@patternfly/react-core';
 import { CheckCircleIcon, ExclamationCircleIcon, ExternalLinkAltIcon, InProgressIcon } from '@patternfly/react-icons';
-import { ExecutedTask } from './types';
+import { ActionsColumn, ExpandableRowContent, Table, Tbody, Td, Th, Thead, ThProps, Tr } from '@patternfly/react-table';
+
 import { tasksFetchExecutedTaskDetail, tasksFetchExecutedTasks } from '../../api';
+import { ExecutedTask } from './types';
 
 type TasksTableProps = {
   slug: string;
@@ -302,12 +303,12 @@ export const TasksTable = ({ slug }: TasksTableProps) => {
                       items={[
                         {
                           title: 'Run this task again',
-                          onClick: () => console.log(`TODO: run task again`),
+                          onClick: () => console.log('TODO: run task again'),
                           isDisabled: true,
                         },
                         {
                           title: 'Delete',
-                          onClick: () => console.log(`TODO: delete task`),
+                          onClick: () => console.log('TODO: delete task'),
                           isDisabled: true,
                         },
                       ]}

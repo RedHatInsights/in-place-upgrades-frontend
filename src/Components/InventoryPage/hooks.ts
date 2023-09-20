@@ -1,5 +1,5 @@
-import { buildAditionalFields, buildFilterString, buildPerPagePageString, buildSortString } from './Helpers';
 import { inventoryFetchSystems, inventoryFetchSystemsTags } from '../../api';
+import { buildAditionalFields, buildFilterString, buildPerPagePageString, buildSortString } from './Helpers';
 
 export const useGetEntities = (onComplete: (result, filtersString) => void, { selectedIds }: { selectedIds?: string[] } = {}) => {
   return async (_items, config) => {
