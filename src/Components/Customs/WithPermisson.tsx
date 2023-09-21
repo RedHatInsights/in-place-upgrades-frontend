@@ -1,7 +1,8 @@
 import React from 'react';
-import { useRbac } from '../../Helpers/hooks';
-import NotAuthorized from '@redhat-cloud-services/frontend-components/NotAuthorized';
 import { Bullseye, Spinner } from '@patternfly/react-core';
+import NotAuthorized from '@redhat-cloud-services/frontend-components/NotAuthorized';
+
+import { useRbac } from '../../Helpers/hooks';
 
 type WithPermissionProps = {
   children: JSX.Element;

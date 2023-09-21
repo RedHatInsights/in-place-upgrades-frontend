@@ -1,9 +1,10 @@
 import { createContext } from 'react';
-import { getRegistry } from '@redhat-cloud-services/frontend-components-utilities/Registry';
-import promiseMiddleware from 'redux-promise-middleware';
 import notificationsMiddleware from '@redhat-cloud-services/frontend-components-notifications/notificationsMiddleware';
 import ReducerRegistry, { applyReducerHash } from '@redhat-cloud-services/frontend-components-utilities/ReducerRegistry';
+import { getRegistry } from '@redhat-cloud-services/frontend-components-utilities/Registry';
+
 import { Middleware, Reducer } from 'redux';
+import promiseMiddleware from 'redux-promise-middleware';
 
 export let registry: ReducerRegistry<Reducer>;
 

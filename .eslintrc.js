@@ -18,11 +18,24 @@ module.exports = {
       },
     },
   ],
+  plugins: ['simple-import-sort'],
   rules: {
-    'sort-imports': [
+    // general styling
+    // 'no-console': 'error',
+    'linebreak-style': ['error', 'unix'],
+    quotes: ['error', 'single'],
+    'simple-import-sort/exports': 'error',
+    'simple-import-sort/imports': [
       'error',
       {
-        ignoreDeclarationSort: true,
+        groups: [
+          // custom grouping - for an explanation, see:
+          // https://github.com/lydell/eslint-plugin-simple-import-sort/#custom-grouping
+          ['^\\u0000'], // side effect imports
+          ['^react', '^axios', '^patternfly', '^prop-types', '^@'], // external packages
+          ['^'], // everything else
+          ['^\\.'], // anything that starts with a dot
+        ],
       },
     ],
   },

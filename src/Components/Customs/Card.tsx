@@ -1,5 +1,5 @@
 import React from 'react';
-import { CardBody, CardFooter, CardTitle, Card as PFCard } from '@patternfly/react-core';
+import { Card as PFCard, CardBody, CardFooter, CardTitle } from '@patternfly/react-core';
 
 const Card = ({ title, body, footer, ...props }) => {
   return (

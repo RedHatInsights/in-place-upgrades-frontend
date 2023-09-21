@@ -1,15 +1,13 @@
+import './LandingPage.scss';
+
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-
-import { PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components/PageHeader';
-
-import { Button, Popover, Tab, TabAction, TabTitleText, Tabs, Text, TextContent } from '@patternfly/react-core';
+import { Button, Popover, Tab, TabAction, Tabs, TabTitleText, Text, TextContent } from '@patternfly/react-core';
 import { ExternalLinkAltIcon, HelpIcon } from '@patternfly/react-icons';
+import { PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components/PageHeader';
 
 import InventoryPage from '../InventoryPage/InventoryPage';
 import TasksPage from '../TasksPage/TasksPage';
-
-import './LandingPage.scss';
 
 /**
  * Landing page for Upgrades App page on Insights.

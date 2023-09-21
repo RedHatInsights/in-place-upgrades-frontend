@@ -1,17 +1,18 @@
+import './InventoryPage.scss';
+
 import React, { useContext, useEffect, useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { Bullseye, Spinner } from '@patternfly/react-core';
-import { useGetEntities } from './hooks';
-import { defaultOnLoad, findCheckedValue, systemColumns } from './Helpers';
-import { RegistryContext } from '../../store';
 import { InventoryTable } from '@redhat-cloud-services/frontend-components/Inventory';
 import useChrome from '@redhat-cloud-services/frontend-components/useChrome';
-import { SystemColumn } from './types';
-import { useDispatch } from 'react-redux';
-import { PERMISSIONS, SERVICES } from '../../Helpers/constants';
-import { inventoryFetchSystems } from '../../api';
 
-import './InventoryPage.scss';
+import { inventoryFetchSystems } from '../../api';
+import { PERMISSIONS, SERVICES } from '../../Helpers/constants';
+import { RegistryContext } from '../../store';
 import WithPermission from '../Customs/WithPermisson';
+import { defaultOnLoad, findCheckedValue, systemColumns } from './Helpers';
+import { useGetEntities } from './hooks';
+import { SystemColumn } from './types';
 
 type InventoryPageProps = {
   selectedIds: string[];
@@ -155,7 +156,7 @@ export const InventoryPage = ({ selectedIds, setSelectedIds }: InventoryPageProp
           isDisabled: !total,
           items: [
             {
-              title: `Select none (0)`,
+              title: 'Select none (0)',
               onClick: () => {
                 bulkSelectIds('none');
               },

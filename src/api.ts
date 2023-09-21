@@ -1,13 +1,14 @@
 import axios from 'axios';
+import { AxiosResponse } from 'axios';
+
 import {
   INVENTORY_API_ROOT,
   INVENTORY_HOSTS_ROOT,
   INVENTORY_TAGS_ROOT,
+  TASK_EXECUTED_ROOT,
   TASKS_API_ROOT,
   TASKS_AVAILABLE_ROOT,
-  TASK_EXECUTED_ROOT,
 } from './Helpers/constants';
-import { AxiosResponse } from 'axios';
 
 /* Inventory */
 

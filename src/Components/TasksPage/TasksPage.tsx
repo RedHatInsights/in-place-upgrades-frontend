@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Grid, GridItem } from '@patternfly/react-core';
+import ErrorState from '@redhat-cloud-services/frontend-components/ErrorState';
+
 import { isError, tasksFetchTaskInfo } from '../../api';
 import { PERMISSIONS, SERVICES } from '../../Helpers/constants';
-import { TaskInfo } from './types';
-
+import Card from '../Customs/Card';
+import Loading from '../Customs/Loading';
+import WithPermission from '../Customs/WithPermisson';
 import RunTaskModal from './RunTaskModal';
 import TasksTable from './TasksTable';
-import WithPermission from '../Customs/WithPermisson';
-import Loading from '../Customs/Loading';
-import Card from '../Customs/Card';
-import ErrorState from '@redhat-cloud-services/frontend-components/ErrorState';
+import { TaskInfo } from './types';
 
 type TasksPageProps = {
   slug: string;

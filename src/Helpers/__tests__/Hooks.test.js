@@ -1,6 +1,7 @@
-import { useRbac } from '../hooks';
-import { PERMISSIONS } from '../constants';
 import { renderHook, waitFor } from '@testing-library/react';
+
+import { PERMISSIONS } from '../constants';
+import { useRbac } from '../hooks';
 
 jest.mock('@redhat-cloud-services/frontend-components/useChrome', () => ({
   __esModule: true,

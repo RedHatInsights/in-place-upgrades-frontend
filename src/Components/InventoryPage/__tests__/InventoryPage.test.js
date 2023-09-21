@@ -1,13 +1,14 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import { BrowserRouter as Router } from 'react-router-dom';
 import { Provider } from 'react-redux';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { render } from '@testing-library/react';
+
 import configureStore from 'redux-mock-store';
 
-import InventoryPage from '../InventoryPage';
-import { useGetEntities } from '../hooks';
-import { findCheckedValue } from '../Helpers';
 import { useRbac } from '../../../Helpers/hooks';
+import { findCheckedValue } from '../Helpers';
+import { useGetEntities } from '../hooks';
+import InventoryPage from '../InventoryPage';
 
 const systemsMock = {
   total: 2,
