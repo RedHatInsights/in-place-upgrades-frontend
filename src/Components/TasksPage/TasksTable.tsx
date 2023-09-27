@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Grid, GridItem, Icon, Pagination, Skeleton, Text, TextContent, Toolbar, ToolbarContent, ToolbarItem } from '@patternfly/react-core';
 import { CheckCircleIcon, ExclamationCircleIcon, ExternalLinkAltIcon, InProgressIcon } from '@patternfly/react-icons';
-import { ActionsColumn, ExpandableRowContent, Table, Tbody, Td, Th, Thead, ThProps, Tr } from '@patternfly/react-table';
+import { ExpandableRowContent, Table, Tbody, Td, Th, Thead, ThProps, Tr } from '@patternfly/react-table';
 
-import { tasksFetchExecutedTaskDetail, tasksFetchExecutedTasks } from '../../api';
+import { tasksFetchExecutedTasks } from '../../api';
 import { loadingSkeletons } from '../../Helpers/Helpers';
 import { ExecutedTask } from './types';
 
@@ -11,7 +11,6 @@ type TasksTableProps = {
   slug: string;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const TasksTable = ({ slug }: TasksTableProps) => {
   const [executedTasks, setExecutedTasks] = useState([] as ExecutedTask[]);
   const [total, setTotal] = useState(0);
@@ -43,7 +42,7 @@ export const TasksTable = ({ slug }: TasksTableProps) => {
     col4: { name: 'Run date/time' },
     length: 4,
   };
-  const sortMapper = ['title', 'systems_count', 'status', 'end_time'];
+  const sortMapper = ['title', 'systems_count', 'status', 'start_time'];
 
   const createPath = (page, perPage, sortIndex, sortDirection) => {
     const limit = `limit=${perPage}`;
@@ -116,14 +115,32 @@ export const TasksTable = ({ slug }: TasksTableProps) => {
     return `(${minutes}m ${seconds}s)`;
   };
 
-  const getStatus = (status) => {
+  /**
+   * Function for getting status icon and text for each task
+   * @param task ExecutedTask
+   * @returns UI element with status icon and text
+   *          - Completed with no alerts: success icon
+   *          - Completed with alerts: warning icon
+   *          - Running: in progress icon
+   */
+  const getStatus = (task) => {
     let icon;
+    const status = task.status;
+
     if (status === 'Completed') {
-      icon = (
-        <Icon status="success" isInline title="Completed">
-          <CheckCircleIcon />
-        </Icon>
-      );
+      if (task.alerts_count > 0) {
+        icon = (
+          <Icon status="warning" isInline title={`System Alerts Found: ${task.alerts_count}`}>
+            <ExclamationCircleIcon />
+          </Icon>
+        );
+      } else {
+        icon = (
+          <Icon status="success" isInline title="No Alerts Found">
+            <CheckCircleIcon />
+          </Icon>
+        );
+      }
     } else if (status === 'Running') {
       icon = (
         <Icon status="info">
@@ -159,31 +176,12 @@ export const TasksTable = ({ slug }: TasksTableProps) => {
     columnIndex,
   });
 
-  const fetchTaskDetails = (id) => {
-    tasksFetchExecutedTaskDetail(id).then((fetchedTask) => {
-      const newExecutedTasks = [...executedTasks];
-      const index = newExecutedTasks.findIndex((task) => task.id === id);
-      newExecutedTasks[index].details = {
-        initiated_by: fetchedTask.initiated_by,
-        start_time: fetchedTask.start_time,
-        end_time: fetchedTask.end_time,
-        alerts_count: fetchedTask.jobs.reduce((acc, job) => {
-          if (job.status !== 'Success') return acc + 1;
-          return acc + job.results.alert;
-        }, 0),
-      };
-      setExecutedTasks(newExecutedTasks);
-    });
-  };
-
   const getTaskDetails = (id) => {
     const task = executedTasks.find((task) => task.id === id);
-    if (task?.details === undefined) {
-      fetchTaskDetails(id);
+
+    if (!task) {
       return <Skeleton />;
     }
-
-    const { details } = task;
 
     return (
       <Grid hasGutter>
@@ -193,7 +191,7 @@ export const TasksTable = ({ slug }: TasksTableProps) => {
               Initiated by:
             </Text>
             <Text component="p" key={`task-details-initiated-val-${id}`}>
-              {details.initiated_by}
+              {task.initiated_by}
             </Text>
           </TextContent>
         </GridItem>
@@ -203,7 +201,7 @@ export const TasksTable = ({ slug }: TasksTableProps) => {
               Run start:
             </Text>
             <Text component="p" key={`task-details-start-val-${id}`}>
-              {getFormattedTime(details.start_time)}
+              {getFormattedTime(task.start_time)}
             </Text>
           </TextContent>
         </GridItem>
@@ -213,7 +211,7 @@ export const TasksTable = ({ slug }: TasksTableProps) => {
               Run end:
             </Text>
             <Text component="p" key={`task-details-end-val-${id}`}>
-              {getEndTime(details.end_time, task.status)} {calculateDurationTime(details.start_time, details.end_time, task.status)}
+              {getEndTime(task.end_time, task.status)} {calculateDurationTime(task.start_time, task.end_time, task.status)}
             </Text>
           </TextContent>
         </GridItem>
@@ -223,7 +221,7 @@ export const TasksTable = ({ slug }: TasksTableProps) => {
               Systems with alerts:
             </Text>
             <Text component="p" key={`task-details-systems-val-${id}`}>
-              {details.alerts_count}
+              {task.alerts_count}
             </Text>
           </TextContent>
         </GridItem>
@@ -285,24 +283,8 @@ export const TasksTable = ({ slug }: TasksTableProps) => {
                   />
                   <Td dataLabel={cols.col1.name}>{getTitle(task.id, task.task_title)}</Td>
                   <Td dataLabel={cols.col2.name}>{task.systems_count}</Td>
-                  <Td dataLabel={cols.col3.name}>{getStatus(task.status)}</Td>
-                  <Td dataLabel={cols.col4.name}>{getEndTime(task.end_time, task.status)}</Td>
-                  <Td isActionCell>
-                    <ActionsColumn
-                      items={[
-                        {
-                          title: 'Run this task again',
-                          onClick: () => console.log('TODO: run task again'),
-                          isDisabled: true,
-                        },
-                        {
-                          title: 'Delete',
-                          onClick: () => console.log('TODO: delete task'),
-                          isDisabled: true,
-                        },
-                      ]}
-                    />
-                  </Td>
+                  <Td dataLabel={cols.col3.name}>{getStatus(task)}</Td>
+                  <Td dataLabel={cols.col4.name}>{getFormattedTime(task.start_time)}</Td>
                 </Tr>
                 {isRowExpanded(task.id) && (
                   <Tr isExpanded={isRowExpanded(task.id)} key={`expanded-${task.id}`}>

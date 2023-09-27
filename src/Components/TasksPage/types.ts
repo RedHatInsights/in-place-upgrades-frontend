@@ -17,6 +17,5 @@ export declare type ExecutedTask = {
   end_time: string;
   status: string;
   systems_count: number;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  details?: any;
+  alerts_count: number;
 };
