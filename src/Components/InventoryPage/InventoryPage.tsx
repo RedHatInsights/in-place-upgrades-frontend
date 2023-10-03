@@ -9,7 +9,7 @@ import useChrome from '@redhat-cloud-services/frontend-components/useChrome';
 import { inventoryFetchSystems } from '../../api';
 import { PERMISSIONS, SERVICES } from '../../Helpers/constants';
 import { RegistryContext } from '../../store';
-import WithPermission from '../Customs/WithPermisson';
+import WithPermission from '../Common/WithPermisson';
 import { defaultOnLoad, findCheckedValue, systemColumns } from './Helpers';
 import { useGetEntities } from './hooks';
 import { SystemColumn } from './types';

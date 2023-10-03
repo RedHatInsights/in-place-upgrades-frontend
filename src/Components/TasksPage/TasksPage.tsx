@@ -1,13 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import { Button, Grid, GridItem } from '@patternfly/react-core';
+import React, { useContext, useEffect, useState } from 'react';
+import { Alert, Button, Flex, FlexItem, Grid, GridItem, Text, TextContent, TextVariants } from '@patternfly/react-core';
 import ErrorState from '@redhat-cloud-services/frontend-components/ErrorState';
 
-import { isError, tasksFetchTaskInfo } from '../../api';
+import { isError, tasksExecuteTask, tasksFetchTaskInfo } from '../../api';
 import { PERMISSIONS, SERVICES } from '../../Helpers/constants';
-import Card from '../Customs/Card';
-import Loading from '../Customs/Loading';
-import WithPermission from '../Customs/WithPermisson';
-import RunTaskModal from './RunTaskModal';
+import { INFO_ALERT_SYSTEMS, TASKS_API_ROOT, TASKS_AVAILABLE_ROOT } from '../../Helpers/constants';
+import { tasksExecuteErrorNotif, tasksExecuteSucessNotif } from '../../Helpers/Helpers';
+import { RegistryContext } from '../../store';
+import Card from '../Common/Card';
+import Loading from '../Common/Loading';
+import SystemPickerModal from '../Common/SystemPickerModal';
+import WithPermission from '../Common/WithPermisson';
 import TasksTable from './TasksTable';
 import { TaskInfo } from './types';
 
@@ -20,6 +23,7 @@ export const TasksPage = ({ slug }: TasksPageProps) => {
   const [taskInfo, setTaskInfo] = useState({} as TaskInfo);
   const [isTaskAvailable, setTaskAvailable] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const { getRegistry } = useContext(RegistryContext);
 
   useEffect(() => {
     tasksFetchTaskInfo(slug).then((fetchedTaskInfo) => {
@@ -30,6 +34,16 @@ export const TasksPage = ({ slug }: TasksPageProps) => {
       setIsLoading(false);
     });
   }, []);
+
+  const onTaskSubmit = async (selectedSystems: string[]) => {
+    const store = getRegistry().getStore();
+    const result = await tasksExecuteTask({ task: slug, hosts: selectedSystems });
+    if (isError(result)) {
+      tasksExecuteErrorNotif(store, result.message);
+    } else {
+      tasksExecuteSucessNotif(store, taskInfo.title, selectedSystems, result.data.id);
+    }
+  };
 
   return (
     <Loading isLoading={isLoading}>
@@ -56,7 +70,41 @@ export const TasksPage = ({ slug }: TasksPageProps) => {
                 </GridItem>
               </Grid>
               {modalIsOpen && (
-                <RunTaskModal isOpen={modalIsOpen} setIsOpen={setModalIsOpen} title={taskInfo.title} description={taskInfo.description} slug={slug} />
+                <SystemPickerModal
+                  isOpen={modalIsOpen}
+                  setIsOpen={setModalIsOpen}
+                  title={taskInfo.title}
+                  onSubmit={onTaskSubmit}
+                  submitText={'Execute task'}
+                  header={
+                    <>
+                      <Flex>
+                        <FlexItem>
+                          <b>Task description</b>
+                        </FlexItem>
+                      </Flex>
+                      <Flex style={{ paddingBottom: '8px' }}>
+                        <FlexItem style={{ width: '100%' }}>
+                          <TextContent>
+                            <Text component={TextVariants.p}>{taskInfo.description}</Text>
+                          </TextContent>
+                        </FlexItem>
+                      </Flex>
+                      <Flex>
+                        <FlexItem>
+                          <a href={`${TASKS_API_ROOT}${TASKS_AVAILABLE_ROOT}/${slug}/playbook`}>Download preview of playbook</a>
+                        </FlexItem>
+                      </Flex>
+                      <br />
+                      <TextContent style={{ paddingBottom: '8px' }}>
+                        <Text component={TextVariants.p}>
+                          <b>Systems to run tasks on</b>
+                        </Text>
+                      </TextContent>
+                      <Alert variant="info" isInline title={INFO_ALERT_SYSTEMS} />
+                    </>
+                  }
+                />
               )}
             </React.Fragment>
           )}
