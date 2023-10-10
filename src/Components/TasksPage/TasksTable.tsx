@@ -4,6 +4,7 @@ import { CheckCircleIcon, ExclamationCircleIcon, ExternalLinkAltIcon, InProgress
 import { ActionsColumn, ExpandableRowContent, Table, Tbody, Td, Th, Thead, ThProps, Tr } from '@patternfly/react-table';
 
 import { tasksFetchExecutedTaskDetail, tasksFetchExecutedTasks } from '../../api';
+import { loadingSkeletons } from '../../Helpers/Helpers';
 import { ExecutedTask } from './types';
 
 type TasksTableProps = {
@@ -144,18 +145,6 @@ export const TasksTable = ({ slug }: TasksTableProps) => {
     );
   };
 
-  const loadinSkeletons = [...Array(perPage)].map((_, index) => (
-    <Tbody key={index}>
-      <Tr key={index}>
-        {[...Array(cols.length + 1)].map((_, index) => (
-          <Td key={index}>
-            <Skeleton />
-          </Td>
-        ))}
-      </Tr>
-    </Tbody>
-  ));
-
   const getSortParams = (columnIndex: number): ThProps['sort'] => ({
     sortBy: {
       index: activeSortIndex,
@@ -282,7 +271,7 @@ export const TasksTable = ({ slug }: TasksTableProps) => {
           </Tr>
         </Thead>
         {isLoadingExecutedTasks
-          ? loadinSkeletons
+          ? loadingSkeletons(perPage, cols.length + 1)
           : executedTasks.map((task, rowIndex) => (
               <Tbody isExpanded={isRowExpanded(task.id)} key={task.id}>
                 <Tr key={task.id}>

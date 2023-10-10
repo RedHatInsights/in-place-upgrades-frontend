@@ -1,11 +1,13 @@
 export const PERMISSIONS = {
   inventoryHostsRead: ['inventory:hosts:read'],
   tasks: ['tasks:*:*'],
+  useRecommendations: ['advisor:*:*'],
 };
 
 export const SERVICES = {
   inventory: 'inventory',
   tasks: 'tasks',
+  advisor: 'advisor',
 };
 
 export const INVENTORY_API_ROOT = '/api/inventory/v1';

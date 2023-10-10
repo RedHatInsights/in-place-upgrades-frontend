@@ -66,13 +66,14 @@ const postTask = async (path, data) => {
 
 /* Recommendations */
 
-export const getRecommendations = async (page: number, perPage: number) => {
+export const getRecommendations = async (page: number, perPage: number, sort: string) => {
   const offset = (page - 1) * perPage;
   const response = await axios
     .get(RECOMMENDATIONS_API_ROOT.concat(RECOMMENDATIONS_RULES_ROOT), {
       params: {
         impacting: 'true',
         topic: 'in-place-upgrade',
+        sort: sort,
         limit: perPage,
         offset: offset,
       },
@@ -80,7 +81,7 @@ export const getRecommendations = async (page: number, perPage: number) => {
     .catch(function (error) {
       return error;
     });
-  return getResponseOrError(response);
+  return response;
 };
 
 /* Common functions */
