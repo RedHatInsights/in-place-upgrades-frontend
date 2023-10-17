@@ -51,25 +51,3 @@ export const loadingSkeletons = (perPage: number, columnsCount: number) =>
       </Tr>
     </Tbody>
   ));
-
-export const sortTable = (rows, activeSortIndex, activeSortDirection, getSortableRowValues) => {
-  if (activeSortIndex !== null) {
-    rows.sort((a, b) => {
-      const aValue = getSortableRowValues(a)[activeSortIndex];
-      const bValue = getSortableRowValues(b)[activeSortIndex];
-      if (typeof aValue === 'number') {
-        // Numeric sort
-        if (activeSortDirection === 'asc') {
-          return (aValue as number) - (bValue as number);
-        }
-        return (bValue as number) - (aValue as number);
-      } else {
-        // String sort
-        if (activeSortDirection === 'asc') {
-          return (aValue as string).localeCompare(bValue as string);
-        }
-        return (bValue as string).localeCompare(aValue as string);
-      }
-    });
-  }
-};

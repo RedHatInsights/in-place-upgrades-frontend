@@ -1,14 +1,17 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Bullseye, Button } from '@patternfly/react-core';
 import { EmptyState, EmptyStateHeader, EmptyStateIcon, EmptyStateVariant } from '@patternfly/react-core';
+import { Icon } from '@patternfly/react-core';
 import { SearchIcon } from '@patternfly/react-icons';
+import { ExternalLinkAltIcon } from '@patternfly/react-icons';
+import { PlayIcon, WrenchIcon } from '@patternfly/react-icons';
 import { Table, Tbody, Td, Th, Thead, ThProps, Tr } from '@patternfly/react-table';
 import { DateFormat } from '@redhat-cloud-services/frontend-components/DateFormat';
 
 import { getRecommendations, isError } from '../../api';
 import { RECOMMENDATIONS_DETAIL_ROOT } from '../../Helpers/constants';
 import { loadingSkeletons } from '../../Helpers/Helpers';
-import { displayErrorNotification, sortTable } from '../../Helpers/Helpers';
+import { displayErrorNotification } from '../../Helpers/Helpers';
 import { RegistryContext } from '../../store';
 import { Recommendation } from './types';
 
@@ -70,13 +73,6 @@ const RecommendationsTable = ({ page, perPage, setTotal }) => {
     return count;
   };
 
-  const getSortableRowValues = (rec: Recommendation): (string | number | Date)[] => {
-    const { description, publish_date, systems, remediation } = rec;
-    return [description, publish_date, systems, remediation];
-  };
-
-  sortTable(recommendations, activeSortIndex, activeSortDirection, getSortableRowValues);
-
   const getSortParams = (columnIndex: number): ThProps['sort'] => {
     return {
       sortBy: {
@@ -126,16 +122,21 @@ const RecommendationsTable = ({ page, perPage, setTotal }) => {
                 <Tr key={rowIndex}>
                   <Td dataLabel={columnNames.description} width={60}>
                     <a key={rec.id} href={`${RECOMMENDATIONS_DETAIL_ROOT}/${rec.id}`} target="_blank" rel="noreferrer">
-                      {rec.description}
+                      {rec.description}{' '}
+                      <Icon size="sm">
+                        <ExternalLinkAltIcon />
+                      </Icon>
                     </a>
                   </Td>
                   <Td dataLabel={columnNames.publish_date}>
                     <DateFormat key={rec.id} date={rec.publish_date} />
                   </Td>
                   <Td dataLabel={columnNames.systems}>{rec.systems}</Td>
-                  <Td dataLabel={columnNames.remediation}>{rec.remediation}</Td>
+                  <Td dataLabel={columnNames.remediation}>
+                    {rec.remediation === 'Playbook' ? <PlayIcon /> : <WrenchIcon />} {rec.remediation}
+                  </Td>
                   <Td dataLabel={columnNames.run} modifier="fitContent">
-                    <Button variant="primary">{columnNames.run}</Button>
+                    {rec.remediation === 'Playbook' && <Button variant="primary">{columnNames.run}</Button>}
                   </Td>
                 </Tr>
               ))

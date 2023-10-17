@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Pagination, Toolbar, ToolbarContent, ToolbarItem } from '@patternfly/react-core';
+import { Text } from '@patternfly/react-core';
+import { Card, CardBody, CardTitle } from '@patternfly/react-core';
 
 import { PERMISSIONS, SERVICES } from '../../Helpers/constants';
 import WithPermission from '../Customs/WithPermisson';
@@ -26,6 +28,15 @@ export const RecommendationsPage = () => {
   return (
     <WithPermission serviceName={SERVICES.advisor} requiredPermissions={PERMISSIONS.useRecommendations}>
       <React.Fragment>
+        <Card>
+          <CardTitle>Recommendations</CardTitle>
+          <CardBody>
+            <Text>
+              This page contains a list of recommendations that can be applied to your systems to fix issues with upgrades. You can apply them
+              manually or run a playbook to automate the process. The recommendations are taken from the In-place upgrade topic in Advisor.
+            </Text>
+          </CardBody>
+        </Card>
         <Toolbar>
           <ToolbarContent>
             <ToolbarItem variant="pagination">{buildPagination()}</ToolbarItem>
