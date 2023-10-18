@@ -1,6 +1,6 @@
 export const PERMISSIONS = {
-  readHosts: 'inventory:hosts:read',
-  useTasks: 'tasks:*:*',
+  inventoryHostsRead: ['inventory:hosts:read'],
+  tasks: ['tasks:*:*'],
 };
 
 export const SERVICES = {

@@ -1,14 +1,18 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { usePermissions } from '@redhat-cloud-services/frontend-components-utilities/RBACHook';
 import { render } from '@testing-library/react';
 
 import configureStore from 'redux-mock-store';
 
-import { useRbac } from '../../../Helpers/hooks';
 import { findCheckedValue } from '../Helpers';
 import { useGetEntities } from '../hooks';
 import InventoryPage from '../InventoryPage';
+
+jest.mock('@redhat-cloud-services/frontend-components-utilities/RBACHook', () => ({
+  usePermissions: jest.fn(),
+}));
 
 const systemsMock = {
   total: 2,
@@ -73,15 +77,13 @@ jest.mock('../../../api', () => {
   };
 });
 
-jest.mock('../../../Helpers/hooks');
-
 describe('InventoryTable', () => {
   let mockStore = configureStore();
   let props;
   const setSelectedIds = jest.fn();
 
   beforeEach(() => {
-    useRbac.mockImplementation(() => [[true], false]);
+    usePermissions.mockImplementation(() => ({ hasAccess: true, isLoading: false }));
   });
 
   it('should render correctly', () => {
@@ -97,7 +99,7 @@ describe('InventoryTable', () => {
   });
 
   it('should render correctly without permissions', () => {
-    useRbac.mockImplementation(() => [[false], false]);
+    usePermissions.mockImplementation(() => ({ hasAccess: false, isLoading: false }));
     const store = mockStore(props);
     const { asFragment } = render(
       <Provider store={store}>

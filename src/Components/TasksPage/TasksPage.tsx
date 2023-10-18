@@ -33,8 +33,8 @@ export const TasksPage = ({ slug }: TasksPageProps) => {
 
   return (
     <Loading isLoading={isLoading}>
-      <WithPermission serviceName={SERVICES.tasks} requiredPermissions={[PERMISSIONS.useTasks]}>
-        <WithPermission serviceName={SERVICES.inventory} requiredPermissions={[PERMISSIONS.readHosts]}>
+      <WithPermission serviceName={SERVICES.tasks} requiredPermissions={PERMISSIONS.tasks}>
+        <WithPermission serviceName={SERVICES.inventory} requiredPermissions={PERMISSIONS.inventoryHostsRead}>
           {!isTaskAvailable ? (
             <ErrorState />
           ) : (
