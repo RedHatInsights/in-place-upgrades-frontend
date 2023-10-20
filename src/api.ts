@@ -71,8 +71,8 @@ export const getRecommendations = async (page: number, perPage: number, sort: st
   const response = await axios
     .get(RECOMMENDATIONS_API_ROOT.concat(RECOMMENDATIONS_RULES_ROOT), {
       params: {
+        has_tag: 'leapp',
         impacting: 'true',
-        topic: 'in-place-upgrade',
         sort: sort,
         limit: perPage,
         offset: offset,

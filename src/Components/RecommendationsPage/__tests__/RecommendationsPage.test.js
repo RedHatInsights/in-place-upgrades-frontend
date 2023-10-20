@@ -2,17 +2,19 @@ import '@testing-library/jest-dom';
 
 import React from 'react';
 import axios from 'axios';
+import { usePermissions } from '@redhat-cloud-services/frontend-components-utilities/RBACHook';
 import { render, screen, waitFor } from '@testing-library/react';
 
-import { useRbac } from '../../../Helpers/hooks';
 import RecommendationsPage from '../RecommendationsPage';
 
-jest.mock('../../../Helpers/hooks');
+jest.mock('@redhat-cloud-services/frontend-components-utilities/RBACHook', () => ({
+  usePermissions: jest.fn(),
+}));
 jest.mock('axios');
 
 describe('RecommendationsPage', () => {
   beforeEach(() => {
-    useRbac.mockImplementation(() => [[true], false]);
+    usePermissions.mockImplementation(() => ({ hasAccess: true, isLoading: false }));
   });
 
   it('should render table with recommendations', async () => {
@@ -65,7 +67,7 @@ describe('RecommendationsPage', () => {
   });
 
   it('should render correctly without permissions', async () => {
-    useRbac.mockImplementation(() => [[false], false]);
+    usePermissions.mockImplementation(() => ({ hasAccess: false, isLoading: false }));
     render(<RecommendationsPage />);
     await waitFor(() => {
       expect(screen.getByText('You do not have access to Upgrades')).toBeInTheDocument();
