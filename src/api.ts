@@ -7,6 +7,9 @@ import {
   INVENTORY_TAGS_ROOT,
   RECOMMENDATIONS_API_ROOT,
   RECOMMENDATIONS_RULES_ROOT,
+  REMEDIATIONS_API_ROOT,
+  REMEDIATIONS_REMEDIATIONS_ROOT,
+  REMEDIATIONS_RESOLUTIONS_ROOT,
   TASK_EXECUTED_ROOT,
   TASKS_API_ROOT,
   TASKS_AVAILABLE_ROOT,
@@ -82,6 +85,39 @@ export const getRecommendations = async (page: number, perPage: number, sort: st
       return error;
     });
   return response;
+};
+
+/* Remediations */
+
+export const postRemediations = async (path: string, data) => {
+  const response = await axios.post(REMEDIATIONS_API_ROOT.concat(path), data).catch(function (error) {
+    return error;
+  });
+
+  return getResponseOrError(response);
+};
+
+export const remediationsResolutions = (ruleId: string) => {
+  return postRemediations(REMEDIATIONS_RESOLUTIONS_ROOT, {
+    issues: [`advisor:${ruleId}`],
+  });
+};
+
+export const remedationsCreate = (name: string, ruleId: string, systems: string[], auto_reboot: boolean = false) => {
+  return postRemediations(REMEDIATIONS_REMEDIATIONS_ROOT, {
+    add: {
+      issues: [
+        {
+          id: `advisor:${ruleId}`,
+          resolution: 'fix',
+          systems: systems,
+        },
+      ],
+      systems: [],
+    },
+    auto_reboot: auto_reboot,
+    name: name,
+  });
 };
 
 /* Common functions */

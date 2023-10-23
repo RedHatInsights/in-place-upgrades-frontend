@@ -5,7 +5,7 @@ import ErrorState from '@redhat-cloud-services/frontend-components/ErrorState';
 import { isError, tasksExecuteTask, tasksFetchTaskInfo } from '../../api';
 import { PERMISSIONS, SERVICES } from '../../Helpers/constants';
 import { INFO_ALERT_SYSTEMS, TASKS_API_ROOT, TASKS_AVAILABLE_ROOT } from '../../Helpers/constants';
-import { tasksExecuteErrorNotif, tasksExecuteSucessNotif } from '../../Helpers/Helpers';
+import { displayErrorNotification, tasksExecuteSucessNotif } from '../../Helpers/Helpers';
 import { RegistryContext } from '../../store';
 import Card from '../Common/Card';
 import Loading from '../Common/Loading';
@@ -39,7 +39,7 @@ export const TasksPage = ({ slug }: TasksPageProps) => {
     const store = getRegistry().getStore();
     const result = await tasksExecuteTask({ task: slug, hosts: selectedSystems });
     if (isError(result)) {
-      tasksExecuteErrorNotif(store, result.message);
+      displayErrorNotification(store, result.message);
     } else {
       tasksExecuteSucessNotif(store, taskInfo.title, selectedSystems, result.data.id);
     }

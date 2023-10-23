@@ -1,19 +1,30 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Bullseye, Button } from '@patternfly/react-core';
-import { EmptyState, EmptyStateHeader, EmptyStateIcon, EmptyStateVariant } from '@patternfly/react-core';
 import { Icon } from '@patternfly/react-core';
+import {
+  EmptyState,
+  EmptyStateHeader,
+  EmptyStateIcon,
+  EmptyStateVariant,
+  Flex,
+  FlexItem,
+  Text,
+  TextContent,
+  TextVariants,
+} from '@patternfly/react-core';
 import { SearchIcon } from '@patternfly/react-icons';
 import { ExternalLinkAltIcon } from '@patternfly/react-icons';
 import { PlayIcon, WrenchIcon } from '@patternfly/react-icons';
 import { Table, Tbody, Td, Th, Thead, ThProps, Tr } from '@patternfly/react-table';
 import { DateFormat } from '@redhat-cloud-services/frontend-components/DateFormat';
 
-import { getRecommendations, isError } from '../../api';
+import { getRecommendations, isError, remedationsCreate, remediationsResolutions } from '../../api';
 import { RECOMMENDATIONS_DETAIL_ROOT } from '../../Helpers/constants';
-import { loadingSkeletons } from '../../Helpers/Helpers';
+import { loadingSkeletons, remediationsCreatedNotif } from '../../Helpers/Helpers';
 import { displayErrorNotification } from '../../Helpers/Helpers';
 import { RegistryContext } from '../../store';
-import { Recommendation } from './types';
+import SystemPickerModal from '../Common/SystemPickerModal';
+import { Recommendation, Resolution } from './types';
 
 const RecommendationsTable = ({ page, perPage, setTotal }) => {
   const columnNames = {
@@ -28,8 +39,37 @@ const RecommendationsTable = ({ page, perPage, setTotal }) => {
   const [activeSortIndex, setActiveSortIndex] = React.useState<number | null>(null);
   const [activeSortDirection, setActiveSortDirection] = React.useState<'asc' | 'desc' | null>(null);
   const [recommendations, setRecommendations] = React.useState<Recommendation[]>([]);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+
+  const [currentRule, setCurrentRule] = useState<Recommendation | null>(null);
+  const [currentResolutions, setCurrentResolutions] = useState<Resolution | null>(null);
+
+  const ruleName = currentRule?.id.replace('leapp_report|', '') || '';
 
   const { getRegistry } = useContext(RegistryContext);
+
+  const getResolutionsInfo = async (rule: Recommendation) => {
+    setCurrentResolutions(null);
+    const response = await remediationsResolutions(rule.id);
+    if (isError(response)) {
+      const store = getRegistry().getStore();
+      displayErrorNotification(store, response.message);
+      return;
+    }
+    setCurrentResolutions(response[`advisor:${rule.id}`]?.resolutions[0]);
+  };
+
+  const createRemediation = async (selectedSystems) => {
+    if (!currentRule) return;
+    const response = await remedationsCreate(ruleName, currentRule.id, selectedSystems, currentResolutions?.needs_reboot);
+    if (isError(response)) {
+      const store = getRegistry().getStore();
+      displayErrorNotification(store, response.message);
+    } else {
+      console.log('responsse: ', response);
+      remediationsCreatedNotif(getRegistry().getStore(), ruleName, response.data.id);
+    }
+  };
 
   const buildSort = (direction, index): string => {
     if (direction === null || index === null) {
@@ -136,7 +176,18 @@ const RecommendationsTable = ({ page, perPage, setTotal }) => {
                     {rec.remediation === 'Playbook' ? <PlayIcon /> : <WrenchIcon />} {rec.remediation}
                   </Td>
                   <Td dataLabel={columnNames.run} modifier="fitContent">
-                    {rec.remediation === 'Playbook' && <Button variant="primary">{columnNames.run}</Button>}
+                    {rec.remediation === 'Playbook' && (
+                      <Button
+                        variant="primary"
+                        onClick={() => {
+                          setCurrentRule(rec);
+                          getResolutionsInfo(rec);
+                          setModalIsOpen(true);
+                        }}
+                      >
+                        {columnNames.run}
+                      </Button>
+                    )}
                   </Td>
                 </Tr>
               ))
@@ -144,6 +195,34 @@ const RecommendationsTable = ({ page, perPage, setTotal }) => {
           </Tbody>
         )}
       </Table>
+
+      {modalIsOpen && (
+        <SystemPickerModal
+          isOpen={modalIsOpen}
+          setIsOpen={setModalIsOpen}
+          title={`Create remediation playbook for ${ruleName}`}
+          onSubmit={createRemediation}
+          submitText={'Create remediation playbook'}
+          header={
+            <>
+              <Flex style={{ paddingBottom: '8px' }}>
+                <FlexItem style={{ width: '100%' }}>
+                  <TextContent>
+                    <Text component={TextVariants.p}>{currentRule?.description}</Text>
+                  </TextContent>
+                  <br />
+                  <TextContent>
+                    <Text component={TextVariants.p}>
+                      The playbook <b>{ruleName}</b> does <span style={{ color: 'red' }}>{currentResolutions?.needs_reboot ? '' : 'not'}</span> auto
+                      reboot systems.
+                    </Text>
+                  </TextContent>
+                </FlexItem>
+              </Flex>
+            </>
+          }
+        />
+      )}
     </React.Fragment>
   );
 };
