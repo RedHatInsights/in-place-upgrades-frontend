@@ -19,26 +19,24 @@ describe('RecommendationsPage', () => {
 
   it('should render table with recommendations', async () => {
     const mockData = {
-      data: {
-        data: [
-          {
-            rule_id: '1',
-            description: 'This is a test recommendation',
-            publish_date: '2021-01-01',
-            impacted_systems_count: 1,
-            playbook_count: 1,
-          },
-          {
-            rule_id: '2',
-            description: 'This is another test recommendation',
-            publish_date: '2021-01-02',
-            impacted_systems_count: 2,
-            playbook_count: 0,
-          },
-        ],
-        meta: {
-          count: 2,
+      data: [
+        {
+          rule_id: '1',
+          description: 'This is a test recommendation',
+          publish_date: '2021-01-01',
+          impacted_systems_count: 1,
+          playbook_count: 1,
         },
+        {
+          rule_id: '2',
+          description: 'This is another test recommendation',
+          publish_date: '2021-01-02',
+          impacted_systems_count: 2,
+          playbook_count: 0,
+        },
+      ],
+      meta: {
+        count: 2,
       },
     };
     axios.get.mockImplementation(() => Promise.resolve(mockData));
@@ -51,11 +49,9 @@ describe('RecommendationsPage', () => {
 
   it('should not render the table when no recommendations were found', async () => {
     const mockData = {
-      data: {
-        data: [],
-        meta: {
-          count: 0,
-        },
+      data: [],
+      meta: {
+        count: 0,
       },
     };
     axios.get.mockImplementation(() => Promise.resolve(mockData));

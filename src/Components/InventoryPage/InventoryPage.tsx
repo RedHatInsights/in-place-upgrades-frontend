@@ -17,9 +17,10 @@ import { SystemColumn } from './types';
 type InventoryPageProps = {
   selectedIds: string[];
   setSelectedIds: (selectedIds: string[]) => void;
+  recommendationRule?: string;
 };
 
-export const InventoryPage = ({ selectedIds, setSelectedIds }: InventoryPageProps) => {
+export const InventoryPage = ({ selectedIds, setSelectedIds, recommendationRule }: InventoryPageProps) => {
   const chrome = useChrome();
   const dispatch = useDispatch();
   const inventory = useRef(null);
@@ -54,6 +55,7 @@ export const InventoryPage = ({ selectedIds, setSelectedIds }: InventoryPageProp
   };
 
   const getEntities = useGetEntities(onComplete, {
+    rule: recommendationRule,
     selectedIds,
   });
 

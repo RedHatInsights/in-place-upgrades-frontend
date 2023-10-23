@@ -11,9 +11,12 @@ type SystemPickerModalProps = {
   header?: React.ReactNode;
   footer?: React.ReactNode;
   submitText: string;
+  inventoryProps?: {
+    recommendationRule: string;
+  };
 };
 
-export const SystemPickerModal = ({ isOpen, setIsOpen, onSubmit, title, header, footer, submitText }: SystemPickerModalProps) => {
+export const SystemPickerModal = ({ isOpen, setIsOpen, onSubmit, title, header, footer, submitText, inventoryProps }: SystemPickerModalProps) => {
   const [selectedSystems, setSelectedSystems] = useState([] as string[]);
   const [isExecuting, setIsExecuting] = useState(false);
 
@@ -47,7 +50,7 @@ export const SystemPickerModal = ({ isOpen, setIsOpen, onSubmit, title, header, 
     >
       <React.Fragment>
         {header}
-        <InventoryPage selectedIds={selectedSystems} setSelectedIds={setSelectedSystems} />
+        <InventoryPage selectedIds={selectedSystems} setSelectedIds={setSelectedSystems} {...inventoryProps} />
         {footer}
       </React.Fragment>
     </Modal>

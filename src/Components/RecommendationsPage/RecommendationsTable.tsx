@@ -18,7 +18,7 @@ import { PlayIcon, WrenchIcon } from '@patternfly/react-icons';
 import { Table, Tbody, Td, Th, Thead, ThProps, Tr } from '@patternfly/react-table';
 import { DateFormat } from '@redhat-cloud-services/frontend-components/DateFormat';
 
-import { getRecommendations, isError, remedationsCreate, remediationsResolutions } from '../../api';
+import { isError, recommendationsFetch, remedationsCreate, remediationsResolutions } from '../../api';
 import { RECOMMENDATIONS_DETAIL_ROOT } from '../../Helpers/constants';
 import { loadingSkeletons, remediationsCreatedNotif } from '../../Helpers/Helpers';
 import { displayErrorNotification } from '../../Helpers/Helpers';
@@ -89,15 +89,14 @@ const RecommendationsTable = ({ page, perPage, setTotal }) => {
   const fetchData = async (page: number, perPage: number, sort) => {
     setShowSkeleton(true);
 
-    const response = await getRecommendations(page, perPage, sort);
+    const response = await recommendationsFetch(page, perPage, sort);
     if (isError(response)) {
       const store = getRegistry().getStore();
       displayErrorNotification(store, response.message);
       return;
     }
 
-    let recommendations = response.data?.data;
-    recommendations = recommendations?.map((rec) => ({
+    const recommendations = response.data.map((rec) => ({
       id: rec.rule_id,
       description: rec.description,
       publish_date: rec.publish_date,
@@ -106,7 +105,7 @@ const RecommendationsTable = ({ page, perPage, setTotal }) => {
     }));
     setRecommendations(recommendations);
 
-    const count = response.data?.meta?.count;
+    const count = response.meta.count;
     setTotal(count);
 
     setShowSkeleton(false);
@@ -203,6 +202,9 @@ const RecommendationsTable = ({ page, perPage, setTotal }) => {
           title={`Create remediation playbook for ${ruleName}`}
           onSubmit={createRemediation}
           submitText={'Create remediation playbook'}
+          inventoryProps={{
+            recommendationRule: currentRule?.id || '',
+          }}
           header={
             <>
               <Flex style={{ paddingBottom: '8px' }}>
@@ -213,8 +215,7 @@ const RecommendationsTable = ({ page, perPage, setTotal }) => {
                   <br />
                   <TextContent>
                     <Text component={TextVariants.p}>
-                      The playbook <b>{ruleName}</b> does <span style={{ color: 'red' }}>{currentResolutions?.needs_reboot ? '' : 'not'}</span> auto
-                      reboot systems.
+                      The playbook does <span style={{ color: 'red' }}>{currentResolutions?.needs_reboot ? '' : 'not'}</span> auto reboot systems.
                     </Text>
                   </TextContent>
                 </FlexItem>

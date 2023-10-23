@@ -7,6 +7,7 @@ import {
   INVENTORY_TAGS_ROOT,
   RECOMMENDATIONS_API_ROOT,
   RECOMMENDATIONS_RULES_ROOT,
+  RECOMMENDATIONS_SYSTEM_DETAILS,
   REMEDIATIONS_API_ROOT,
   REMEDIATIONS_REMEDIATIONS_ROOT,
   REMEDIATIONS_RESOLUTIONS_ROOT,
@@ -19,6 +20,10 @@ import {
 
 export const inventoryFetchSystems = (path: string = '') => {
   return getInventory(INVENTORY_HOSTS_ROOT.concat(path));
+};
+
+export const inventoryFetchSystemsByIds = (ids: string[], path: string = '') => {
+  return getInventory(INVENTORY_HOSTS_ROOT.concat('/').concat(ids.join(',')).concat(path));
 };
 
 export const inventoryFetchSystemsTags = (ids: string[], path: string = '') => {
@@ -69,22 +74,21 @@ const postTask = async (path, data) => {
 
 /* Recommendations */
 
-export const getRecommendations = async (page: number, perPage: number, sort: string) => {
+export const getRecommendations = async (path: string) => {
+  const response = await axios.get(RECOMMENDATIONS_API_ROOT.concat(path)).catch(function (error) {
+    return error;
+  });
+
+  return getResponseOrError(response);
+};
+
+export const recommendationsFetch = (page: number, perPage: number, sort: string) => {
   const offset = (page - 1) * perPage;
-  const response = await axios
-    .get(RECOMMENDATIONS_API_ROOT.concat(RECOMMENDATIONS_RULES_ROOT), {
-      params: {
-        has_tag: 'leapp',
-        impacting: 'true',
-        sort: sort,
-        limit: perPage,
-        offset: offset,
-      },
-    })
-    .catch(function (error) {
-      return error;
-    });
-  return response;
+  return getRecommendations(RECOMMENDATIONS_RULES_ROOT.concat(`?has_tag=leapp&impacting=true&sort=${sort}&limit=${perPage}&offset=${offset}`));
+};
+
+export const recommendationsAffectedSystems = (ruleId: string, path: string = '') => {
+  return getRecommendations(RECOMMENDATIONS_RULES_ROOT.concat(`${ruleId}`).concat(RECOMMENDATIONS_SYSTEM_DETAILS).concat(path));
 };
 
 /* Remediations */

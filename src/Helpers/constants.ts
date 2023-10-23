@@ -21,6 +21,7 @@ export const TASK_EXECUTED_ROOT = '/executed_task';
 export const RECOMMENDATIONS_API_ROOT = '/api/insights/v1';
 export const RECOMMENDATIONS_RULES_ROOT = '/rule/';
 export const RECOMMENDATIONS_DETAIL_ROOT = '/insights/advisor/recommendations';
+export const RECOMMENDATIONS_SYSTEM_DETAILS = '/systems_detail/';
 
 export const REMEDIATIONS_API_ROOT = '/api/remediations/v1';
 export const REMEDIATIONS_RESOLUTIONS_ROOT = '/resolutions';
