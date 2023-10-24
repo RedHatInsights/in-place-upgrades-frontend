@@ -126,7 +126,7 @@ export const InventoryPage = ({ selectedIds, setSelectedIds }: InventoryPageProp
   };
 
   return (
-    <WithPermission serviceName={SERVICES.inventory} requiredPermissions={[PERMISSIONS.readHosts]}>
+    <WithPermission serviceName={SERVICES.inventory} requiredPermissions={PERMISSIONS.inventoryHostsRead}>
       <InventoryTable
         isFullView
         autoRefresh
