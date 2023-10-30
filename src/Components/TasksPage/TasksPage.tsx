@@ -98,7 +98,7 @@ export const TasksPage = ({ slug }: TasksPageProps) => {
                       <br />
                       <TextContent style={{ paddingBottom: '8px' }}>
                         <Text component={TextVariants.p}>
-                          <b>Systems to run tasks on</b>
+                          <b>Systems to run task on</b>
                         </Text>
                       </TextContent>
                       <Alert variant="info" isInline title={INFO_ALERT_SYSTEMS} />

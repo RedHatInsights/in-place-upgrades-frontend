@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Bullseye, Button } from '@patternfly/react-core';
 import { Icon } from '@patternfly/react-core';
 import {
+  Alert,
   EmptyState,
   EmptyStateHeader,
   EmptyStateIcon,
@@ -19,7 +20,7 @@ import { Table, Tbody, Td, Th, Thead, ThProps, Tr } from '@patternfly/react-tabl
 import { DateFormat } from '@redhat-cloud-services/frontend-components/DateFormat';
 
 import { isError, recommendationsFetch, remedationsCreate, remediationsResolutions } from '../../api';
-import { RECOMMENDATIONS_DETAIL_ROOT } from '../../Helpers/constants';
+import { INFO_ALERT_SYSTEMS, RECOMMENDATIONS_DETAIL_ROOT } from '../../Helpers/constants';
 import { loadingSkeletons, remediationsCreatedNotif } from '../../Helpers/Helpers';
 import { displayErrorNotification } from '../../Helpers/Helpers';
 import { RegistryContext } from '../../store';
@@ -32,7 +33,7 @@ const RecommendationsTable = ({ page, perPage, setTotal }) => {
     publish_date: 'Modified',
     systems: 'Systems',
     remediation: 'Remediation',
-    run: 'Run',
+    run: 'Create playbook',
   };
 
   const [showSkeleton, setShowSkeleton] = useState(false);
@@ -60,13 +61,15 @@ const RecommendationsTable = ({ page, perPage, setTotal }) => {
   };
 
   const createRemediation = async (selectedSystems) => {
-    if (!currentRule) return;
+    if (!currentRule) {
+      displayErrorNotification(getRegistry().getStore(), 'No rule selected');
+      return;
+    }
     const response = await remedationsCreate(ruleName, currentRule.id, selectedSystems, currentResolutions?.needs_reboot);
     if (isError(response)) {
       const store = getRegistry().getStore();
       displayErrorNotification(store, response.message);
     } else {
-      console.log('responsse: ', response);
       remediationsCreatedNotif(getRegistry().getStore(), ruleName, response.data.id);
     }
   };
@@ -210,6 +213,15 @@ const RecommendationsTable = ({ page, perPage, setTotal }) => {
               <Flex style={{ paddingBottom: '8px' }}>
                 <FlexItem style={{ width: '100%' }}>
                   <TextContent>
+                    <Text component={TextVariants.p}>
+                      <b>Description</b>
+                    </Text>
+                  </TextContent>
+                </FlexItem>
+              </Flex>
+              <Flex>
+                <FlexItem>
+                  <TextContent>
                     <Text component={TextVariants.p}>{currentRule?.description}</Text>
                   </TextContent>
                   <br />
@@ -220,6 +232,13 @@ const RecommendationsTable = ({ page, perPage, setTotal }) => {
                   </TextContent>
                 </FlexItem>
               </Flex>
+              <br />
+              <TextContent style={{ paddingBottom: '8px' }}>
+                <Text component={TextVariants.p}>
+                  <b>Select systems to include in the playbook</b>
+                </Text>
+              </TextContent>
+              <Alert variant="info" isInline title={INFO_ALERT_SYSTEMS} />
             </>
           }
         />

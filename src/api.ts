@@ -93,7 +93,7 @@ export const recommendationsAffectedSystems = (ruleId: string, path: string = ''
 
 /* Remediations */
 
-export const postRemediations = async (path: string, data) => {
+const postRemediations = async (path: string, data) => {
   const response = await axios.post(REMEDIATIONS_API_ROOT.concat(path), data).catch(function (error) {
     return error;
   });
