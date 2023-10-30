@@ -3,7 +3,7 @@ import { Alert, Button, Flex, FlexItem, Modal, Text, TextContent, TextVariants }
 
 import { isError, tasksExecuteTask } from '../../api';
 import { INFO_ALERT_SYSTEMS, TASKS_API_ROOT, TASKS_AVAILABLE_ROOT } from '../../Helpers/constants';
-import { tasksExecuteErrorNotif, tasksExecuteSucessNotif } from '../../Helpers/Helpers';
+import { displayErrorNotification, tasksExecuteSucessNotif } from '../../Helpers/Helpers';
 import { RegistryContext } from '../../store';
 import InventoryPage from '../InventoryPage/InventoryPage';
 
@@ -18,7 +18,7 @@ export const RunTaskModal = ({ isOpen, setIsOpen, title, description, slug }) =>
     const store = getRegistry().getStore();
     const result = await tasksExecuteTask({ task: slug, hosts: selectedSystems });
     if (isError(result)) {
-      tasksExecuteErrorNotif(store, result.message);
+      displayErrorNotification(store, result.message);
     } else {
       tasksExecuteSucessNotif(store, title, selectedSystems, result.data.id);
     }

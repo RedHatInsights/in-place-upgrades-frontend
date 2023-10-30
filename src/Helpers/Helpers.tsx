@@ -1,5 +1,7 @@
 import React from 'react';
 import { Text, TextContent } from '@patternfly/react-core';
+import { Tbody, Td, Tr } from '@patternfly/react-table';
+import { Skeleton } from '@redhat-cloud-services/frontend-components/Skeleton';
 import { addNotification } from '@redhat-cloud-services/frontend-components-notifications/redux';
 
 export const dispatchNotification = (store, notification) => {
@@ -27,7 +29,7 @@ export const tasksExecuteSucessNotif = (store, title, ids, task_id) => {
   });
 };
 
-export const tasksExecuteErrorNotif = (store, message) => {
+export const displayErrorNotification = (store, message) => {
   dispatchNotification(store, {
     variant: 'danger',
     title: 'Error',
@@ -36,3 +38,16 @@ export const tasksExecuteErrorNotif = (store, message) => {
     autoDismiss: false,
   });
 };
+
+export const loadingSkeletons = (perPage: number, columnsCount: number) =>
+  [...Array(perPage)].map((_, index) => (
+    <Tbody key={index}>
+      <Tr key={index}>
+        {[...Array(columnsCount)].map((_, index) => (
+          <Td key={index}>
+            <Skeleton />
+          </Td>
+        ))}
+      </Tr>
+    </Tbody>
+  ));

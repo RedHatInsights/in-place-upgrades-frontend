@@ -5,6 +5,8 @@ import {
   INVENTORY_API_ROOT,
   INVENTORY_HOSTS_ROOT,
   INVENTORY_TAGS_ROOT,
+  RECOMMENDATIONS_API_ROOT,
+  RECOMMENDATIONS_RULES_ROOT,
   TASK_EXECUTED_ROOT,
   TASKS_API_ROOT,
   TASKS_AVAILABLE_ROOT,
@@ -60,6 +62,26 @@ const postTask = async (path, data) => {
   });
 
   return getResponseOrError(response);
+};
+
+/* Recommendations */
+
+export const getRecommendations = async (page: number, perPage: number, sort: string) => {
+  const offset = (page - 1) * perPage;
+  const response = await axios
+    .get(RECOMMENDATIONS_API_ROOT.concat(RECOMMENDATIONS_RULES_ROOT), {
+      params: {
+        has_tag: 'leapp',
+        impacting: 'true',
+        sort: sort,
+        limit: perPage,
+        offset: offset,
+      },
+    })
+    .catch(function (error) {
+      return error;
+    });
+  return response;
 };
 
 /* Common functions */

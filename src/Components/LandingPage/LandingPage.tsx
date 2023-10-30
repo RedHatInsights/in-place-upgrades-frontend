@@ -7,6 +7,7 @@ import { ExternalLinkAltIcon, HelpIcon } from '@patternfly/react-icons';
 import { PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components/PageHeader';
 
 import InventoryPage from '../InventoryPage/InventoryPage';
+import RecommendationsPage from '../RecommendationsPage/RecommendationsPage';
 import TasksPage from '../TasksPage/TasksPage';
 
 /**
@@ -17,7 +18,7 @@ export const LandingPage = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
-  const tabsPath = ['', 'pre-upgrade', 'remediations', 'upgrade', 'post-upgrade'];
+  const tabsPath = ['', 'pre-upgrade', 'recommendations', 'upgrade', 'post-upgrade'];
 
   const tabPath = pathname.split('/').pop() || '';
   const initialActiveTabKey = tabsPath.indexOf(tabPath) >= 0 ? tabsPath.indexOf(tabPath) : 0;
@@ -116,8 +117,10 @@ export const LandingPage = () => {
             <TasksPage slug={'leapp-preupgrade'} />
           </section>
         </Tab>
-        <Tab eventKey={2} title={<TabTitleText>Remediations</TabTitleText>}>
-          <section className="pf-l-page__main-section pf-c-page__main-section">TODO: Content Remediations</section>
+        <Tab eventKey={2} title={<TabTitleText>Recommendations</TabTitleText>}>
+          <section className="pf-l-page__main-section pf-c-page__main-section">
+            <RecommendationsPage />
+          </section>
         </Tab>
         <Tab eventKey={3} title={<TabTitleText>Upgrade</TabTitleText>}>
           <section className="pf-l-page__main-section pf-c-page__main-section">
