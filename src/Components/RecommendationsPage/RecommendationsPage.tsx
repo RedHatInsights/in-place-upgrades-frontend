@@ -4,7 +4,7 @@ import { Text } from '@patternfly/react-core';
 import { Card, CardBody, CardTitle } from '@patternfly/react-core';
 
 import { PERMISSIONS, SERVICES } from '../../Helpers/constants';
-import WithPermission from '../Customs/WithPermisson';
+import WithPermission from '../Common/WithPermisson';
 import RecommendationsTable from './RecommendationsTable';
 
 export const RecommendationsPage = () => {

@@ -9,7 +9,7 @@ import useChrome from '@redhat-cloud-services/frontend-components/useChrome';
 import { inventoryFetchSystems } from '../../api';
 import { PERMISSIONS, SERVICES } from '../../Helpers/constants';
 import { RegistryContext } from '../../store';
-import WithPermission from '../Customs/WithPermisson';
+import WithPermission from '../Common/WithPermisson';
 import { defaultOnLoad, findCheckedValue, systemColumns } from './Helpers';
 import { useGetEntities } from './hooks';
 import { SystemColumn } from './types';
@@ -17,9 +17,10 @@ import { SystemColumn } from './types';
 type InventoryPageProps = {
   selectedIds: string[];
   setSelectedIds: (selectedIds: string[]) => void;
+  recommendationRule?: string;
 };
 
-export const InventoryPage = ({ selectedIds, setSelectedIds }: InventoryPageProps) => {
+export const InventoryPage = ({ selectedIds, setSelectedIds, recommendationRule }: InventoryPageProps) => {
   const chrome = useChrome();
   const dispatch = useDispatch();
   const inventory = useRef(null);
@@ -54,6 +55,7 @@ export const InventoryPage = ({ selectedIds, setSelectedIds }: InventoryPageProp
   };
 
   const getEntities = useGetEntities(onComplete, {
+    rule: recommendationRule,
     selectedIds,
   });
 

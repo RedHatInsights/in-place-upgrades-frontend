@@ -5,3 +5,10 @@ export type Recommendation = {
   systems: number;
   remediation: string;
 };
+
+export type Resolution = {
+  id: string;
+  description: string;
+  needs_reboot: boolean;
+  resolution_risk: number;
+};

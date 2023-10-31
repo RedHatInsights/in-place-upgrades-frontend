@@ -21,5 +21,10 @@ export const TASK_EXECUTED_ROOT = '/executed_task';
 export const RECOMMENDATIONS_API_ROOT = '/api/insights/v1';
 export const RECOMMENDATIONS_RULES_ROOT = '/rule/';
 export const RECOMMENDATIONS_DETAIL_ROOT = '/insights/advisor/recommendations';
+export const RECOMMENDATIONS_SYSTEM_DETAILS = '/systems_detail/';
+
+export const REMEDIATIONS_API_ROOT = '/api/remediations/v1';
+export const REMEDIATIONS_RESOLUTIONS_ROOT = '/resolutions';
+export const REMEDIATIONS_REMEDIATIONS_ROOT = '/remediations';
 
 export const INFO_ALERT_SYSTEMS = 'Eligible systems include systems connected to console.redhat.com with rhc, or Satellite with Cloud Connector.';

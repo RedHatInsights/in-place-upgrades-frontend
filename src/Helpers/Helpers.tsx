@@ -29,6 +29,26 @@ export const tasksExecuteSucessNotif = (store, title, ids, task_id) => {
   });
 };
 
+export const remediationsCreatedNotif = (store, title, remediation_id) => {
+  dispatchNotification(store, {
+    variant: 'info',
+    title: 'Remediation created',
+    description: (
+      <span>
+        Your remediation playbook &quot;{title}&quot; has been created.
+        <br />
+        <br />
+        <TextContent>
+          <Text component="a" href={`/insights/remediations/${remediation_id}`} rel="noreferrer" target="_blank">
+            View remediation
+          </Text>
+        </TextContent>
+      </span>
+    ),
+    dismissable: true,
+  });
+};
+
 export const displayErrorNotification = (store, message) => {
   dispatchNotification(store, {
     variant: 'danger',
