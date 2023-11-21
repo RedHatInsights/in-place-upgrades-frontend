@@ -9,7 +9,7 @@ type LoadingProps = {
 const Loading = ({ children, isLoading }: LoadingProps): JSX.Element => {
   return isLoading ? (
     <Bullseye>
-      <Spinner />
+      <Spinner data-testid="loading-spinner" />
     </Bullseye>
   ) : (
     children

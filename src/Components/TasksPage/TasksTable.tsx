@@ -124,7 +124,7 @@ export const TasksTable = ({ slug }: TasksTableProps) => {
    *          - Running: in progress icon
    */
   const getStatus = (task) => {
-    let icon;
+    let icon: React.ReactNode;
     const status = task.status;
 
     if (status === 'Completed') {
