@@ -10,9 +10,6 @@ module.exports = {
   roots: ['<rootDir>/src/'],
   transformIgnorePatterns: ['node_modules/(?!@patternfly|lodash-es|@openshift|@redhat-cloud-services)'],
   testEnvironment: 'jest-environment-jsdom',
-  moduleDirectories: [
-    'node_modules',
-    './src', //the root directory
-  ],
+  moduleDirectories: ['node_modules', '<rootDir>/src'],
   setupFilesAfterEnv: ['<rootDir>/config/jest.setup.js'],
 };
