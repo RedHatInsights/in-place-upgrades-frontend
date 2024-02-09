@@ -93,12 +93,25 @@ export const recommendationsAffectedSystems = (ruleId: string, path: string = ''
 
 /* Remediations */
 
+const getRemediations = async (path: string) => {
+  const response = await axios.get(REMEDIATIONS_API_ROOT.concat(path)).catch(function (error) {
+    return error;
+  });
+
+  return getResponseOrError(response);
+};
+
 const postRemediations = async (path: string, data) => {
   const response = await axios.post(REMEDIATIONS_API_ROOT.concat(path), data).catch(function (error) {
     return error;
   });
 
   return getResponseOrError(response);
+};
+
+export const remediationsFetch = (page: number, perPage: number, sort: string, hide_arhived: boolean = true) => {
+  const offset = (page - 1) * perPage;
+  return getRemediations(REMEDIATIONS_REMEDIATIONS_ROOT.concat(`?sort=${sort}&limit=${perPage}&offset=${offset}&hide_archived=${hide_arhived}`));
 };
 
 export const remediationsResolutions = (ruleId: string) => {

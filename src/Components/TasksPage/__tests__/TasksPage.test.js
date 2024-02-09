@@ -6,7 +6,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
 import configureStore from 'redux-mock-store';
 
-import TasksPage from './TasksPage';
+import TasksPage from '../TasksPage';
 
 jest.mock('@redhat-cloud-services/frontend-components-utilities/RBACHook', () => ({
   usePermissions: jest.fn(),
@@ -102,7 +102,7 @@ const taskInfo = {
   parameters: [],
 };
 
-jest.mock('../../api', () => ({
+jest.mock('../../../api', () => ({
   tasksFetchExecutedTasks: jest.fn(() => Promise.resolve(executedTasksData)),
   tasksFetchTaskInfo: jest.fn(() => Promise.resolve(taskInfo)),
   isError: jest.fn(() => false),

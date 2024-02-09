@@ -8,6 +8,7 @@ import { PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-com
 
 import InventoryPage from '../InventoryPage/InventoryPage';
 import RecommendationsPage from '../RecommendationsPage/RecommendationsPage';
+import RemediationsPage from '../RemediationsPage/RemediationsPage';
 import TasksPage from '../TasksPage/TasksPage';
 
 /**
@@ -18,7 +19,7 @@ export const LandingPage = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
-  const tabsPath = ['', 'pre-upgrade', 'recommendations', 'upgrade', 'post-upgrade'];
+  const tabsPath = ['', 'pre-upgrade', 'recommendations', 'remediations', 'upgrade', 'post-upgrade'];
 
   const tabPath = pathname.split('/').pop() || '';
   const initialActiveTabKey = tabsPath.indexOf(tabPath) >= 0 ? tabsPath.indexOf(tabPath) : 0;
@@ -122,12 +123,17 @@ export const LandingPage = () => {
             <RecommendationsPage />
           </section>
         </Tab>
-        <Tab eventKey={3} title={<TabTitleText>Upgrade</TabTitleText>}>
+        <Tab eventKey={3} title={<TabTitleText>Remediations</TabTitleText>}>
+          <section className="pf-l-page__main-section pf-c-page__main-section">
+            <RemediationsPage />
+          </section>
+        </Tab>
+        <Tab eventKey={4} title={<TabTitleText>Upgrade</TabTitleText>}>
           <section className="pf-l-page__main-section pf-c-page__main-section">
             <TasksPage slug={'leapp-upgrade'} />
           </section>
         </Tab>
-        <Tab eventKey={4} isDisabled title={<TabTitleText>Post-upgrade</TabTitleText>}>
+        <Tab eventKey={5} isDisabled title={<TabTitleText>Post-upgrade</TabTitleText>}>
           <section className="pf-l-page__main-section pf-c-page__main-section">TODO: Content Post-upgrade</section>
         </Tab>
       </Tabs>

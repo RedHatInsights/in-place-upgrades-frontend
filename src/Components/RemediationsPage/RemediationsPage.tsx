@@ -5,9 +5,9 @@ import { Card, CardBody, CardTitle } from '@patternfly/react-core';
 
 import { PERMISSIONS, SERVICES } from '../../Helpers/constants';
 import WithPermission from '../Common/WithPermisson';
-import RecommendationsTable from './RecommendationsTable';
+import RecommendationsTable from './RemediationsTable';
 
-export const RecommendationsPage = () => {
+export const RemediationsPage = () => {
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
   const [total, setTotal] = useState(0);
@@ -35,16 +35,12 @@ export const RecommendationsPage = () => {
   };
 
   return (
-    <WithPermission serviceName={SERVICES.advisor} requiredPermissions={PERMISSIONS.useRecommendations}>
+    <WithPermission serviceName={SERVICES.advisor} requiredPermissions={PERMISSIONS.useRemediations}>
       <React.Fragment>
         <Card>
-          <CardTitle>Recommendations</CardTitle>
+          <CardTitle>Remmediations</CardTitle>
           <CardBody>
-            <Text>
-              This page contains a list of recommendations that can be applied to your systems to fix issues with upgrades. You can apply them
-              manually or create a playbook and run in <a href="/insights/upgrades/remediations">remediations tab</a> to automate the process. The
-              recommendations are taken from the In-place upgrade topic in Advisor.
-            </Text>
+            <Text>This page contains a list of remediations playbooks that can be applied to your systems to fix issues with upgrades.</Text>
           </CardBody>
         </Card>
         <Toolbar>
@@ -63,4 +59,4 @@ export const RecommendationsPage = () => {
   );
 };
 
-export default RecommendationsPage;
+export default RemediationsPage;
