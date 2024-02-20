@@ -1,14 +1,14 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Bullseye } from '@patternfly/react-core';
 import { Icon } from '@patternfly/react-core';
-import { EmptyState, EmptyStateHeader, EmptyStateIcon, EmptyStateVariant } from '@patternfly/react-core';
-import { SearchIcon } from '@patternfly/react-icons';
+import { EmptyState, EmptyStateBody, EmptyStateHeader, EmptyStateIcon, EmptyStateVariant } from '@patternfly/react-core';
+import { WrenchIcon } from '@patternfly/react-icons';
 import { ExternalLinkAltIcon } from '@patternfly/react-icons';
 import { Table, Tbody, Td, Th, Thead, ThProps, Tr } from '@patternfly/react-table';
 import { DateFormat } from '@redhat-cloud-services/frontend-components/DateFormat';
 
 import { isError, remediationsFetch } from '../../api';
-import { REMMEDIATIONS_DETAIL_ROOT } from '../../Helpers/constants';
+import { REMEDIATIONS_DETAIL_ROOT } from '../../Helpers/constants';
 import { loadingSkeletons } from '../../Helpers/Helpers';
 import { displayErrorNotification } from '../../Helpers/Helpers';
 import { RegistryContext } from '../../store';
@@ -25,7 +25,7 @@ const RemediationsTable = ({ page, perPage, setTotal }) => {
   const [showSkeleton, setShowSkeleton] = useState(false);
   const [activeSortIndex, setActiveSortIndex] = React.useState<number | null>(null);
   const [activeSortDirection, setActiveSortDirection] = React.useState<'asc' | 'desc' | null>(null);
-  const [remmediations, setRemediations] = React.useState<Remediation[]>([]);
+  const [remediations, setRemediations] = React.useState<Remediation[]>([]);
 
   const { getRegistry } = useContext(RegistryContext);
 
@@ -66,7 +66,6 @@ const RemediationsTable = ({ page, perPage, setTotal }) => {
     setTotal(count);
 
     setShowSkeleton(false);
-    return count;
   };
 
   const getSortParams = (columnIndex: number): ThProps['sort'] => {
@@ -103,21 +102,26 @@ const RemediationsTable = ({ page, perPage, setTotal }) => {
           loadingSkeletons(perPage, Object.keys(columnNames).length)
         ) : (
           <Tbody>
-            {remmediations.length === 0 ? (
+            {remediations.length === 0 ? (
               <Tr>
                 <Td colSpan={Object.keys(columnNames).length}>
                   <Bullseye>
-                    <EmptyState variant={EmptyStateVariant.sm}>
-                      <EmptyStateHeader icon={<EmptyStateIcon icon={SearchIcon} />} titleText="No remediations found" headingLevel="h2" />
+                    <EmptyState variant={EmptyStateVariant.full}>
+                      <EmptyStateHeader icon={<EmptyStateIcon icon={WrenchIcon} />} titleText="No remediations playbooks yet" headingLevel="h2" />
+                      <EmptyStateBody>
+                        Insights uses Ansible Playbooks to remediate or mitigate configuration problems on your systems, and apply patches.
+                        <br />
+                        <br /> To create a remediation playbook, select <a href="/insights/upgrades/recommendations">Recommendations</a> tab.
+                      </EmptyStateBody>
                     </EmptyState>
                   </Bullseye>
                 </Td>
               </Tr>
             ) : (
-              remmediations.map((rec, rowIndex) => (
+              remediations.map((rec, rowIndex) => (
                 <Tr key={rowIndex}>
                   <Td dataLabel={columnNames.description} width={60}>
-                    <a key={rec.id} href={`${REMMEDIATIONS_DETAIL_ROOT}/${rec.id}`} target="_blank" rel="noreferrer">
+                    <a key={rec.id} href={`${REMEDIATIONS_DETAIL_ROOT}/${rec.id}`} target="_blank" rel="noreferrer">
                       {rec.name}{' '}
                       <Icon size="sm">
                         <ExternalLinkAltIcon />

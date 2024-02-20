@@ -17,19 +17,19 @@ describe('RemediationsPage', () => {
     usePermissions.mockImplementation(() => ({ hasAccess: true, isLoading: false }));
   });
 
-  it('should render table with recommendations', async () => {
+  it('should render table with remediations', async () => {
     const mockData = {
       data: [
         {
           id: '1',
-          name: 'This is a test recommendation',
+          name: 'This is a test remediation',
           updated_at: '2021-01-01',
           system_count: 1,
           resolved_count: 1,
         },
         {
           id: '2',
-          name: 'This is another test recommendation',
+          name: 'This is another test remediation',
           updated_at: '2021-01-02',
           system_count: 2,
           resolved_count: 0,
@@ -42,12 +42,12 @@ describe('RemediationsPage', () => {
     axios.get.mockImplementation(() => Promise.resolve(mockData));
     render(<RemediationsPage />);
     await waitFor(() => {
-      expect(screen.getByText('This is a test recommendation')).toBeInTheDocument();
-      expect(screen.getByText('This is another test recommendation')).toBeInTheDocument();
+      expect(screen.getByText('This is a test remediation')).toBeInTheDocument();
+      expect(screen.getByText('This is another test remediation')).toBeInTheDocument();
     });
   });
 
-  it('should not render the table when no recommendations were found', async () => {
+  it('should not render the table when no remediations were found', async () => {
     const mockData = {
       data: [],
       meta: {
@@ -58,7 +58,7 @@ describe('RemediationsPage', () => {
     render(<RemediationsPage />);
     // wait for the api call to finish and expect "No remeediations found" to be displayed
     await waitFor(() => {
-      expect(screen.getByText('No remediations found')).toBeInTheDocument();
+      expect(screen.getByText('No remediations playbooks yet')).toBeInTheDocument();
     });
   });
 

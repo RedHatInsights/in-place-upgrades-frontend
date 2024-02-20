@@ -38,9 +38,9 @@ export const RemediationsPage = () => {
     <WithPermission serviceName={SERVICES.advisor} requiredPermissions={PERMISSIONS.useRemediations}>
       <React.Fragment>
         <Card>
-          <CardTitle>Remmediations</CardTitle>
+          <CardTitle>Remediations</CardTitle>
           <CardBody>
-            <Text>This page contains a list of remediations playbooks that can be applied to your systems to fix issues with upgrades.</Text>
+            <Text>This page contains a list of created remediation playbooks.</Text>
           </CardBody>
         </Card>
         <Toolbar>
