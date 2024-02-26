@@ -29,14 +29,14 @@ test('expect to render title and clicable tabs', () => {
   expect(screen.getByRole('heading')).toHaveTextContent('Upgrades');
 
   // Tabs exist
-  ['Inventory', 'Pre-upgrade', 'Upgrade', 'Recommendations'].forEach((tab) => {
+  ['Inventory', 'Pre-upgrade', 'Upgrade', 'Remediations', 'Recommendations'].forEach((tab) => {
     const foundTab = screen.getByText(tab).closest('button');
     expect(foundTab).not.toBeNull();
   });
 
   // Tabs can be changed
   const inventoryTab = screen.getByText('Inventory').closest('button');
-  ['Pre-upgrade', 'Upgrade', 'Recommendations'].forEach((tab) => {
+  ['Pre-upgrade', 'Upgrade', 'Recommendations', 'Remediations'].forEach((tab) => {
     const foundTab = screen.getByText(tab).closest('button');
     fireEvent.click(foundTab);
     expect(inventoryTab).toHaveAttribute('aria-selected', 'false');

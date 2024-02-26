@@ -2,6 +2,7 @@ export const PERMISSIONS = {
   inventoryHostsRead: ['inventory:hosts:read'],
   tasks: ['tasks:*:*'],
   useRecommendations: ['advisor:*:*'],
+  useRemediations: ['advisor:*:*'],
 };
 
 export const SERVICES = {
@@ -26,5 +27,6 @@ export const RECOMMENDATIONS_SYSTEM_DETAILS = '/systems_detail/';
 export const REMEDIATIONS_API_ROOT = '/api/remediations/v1';
 export const REMEDIATIONS_RESOLUTIONS_ROOT = '/resolutions';
 export const REMEDIATIONS_REMEDIATIONS_ROOT = '/remediations';
+export const REMEDIATIONS_DETAIL_ROOT = '/insights/remediations';
 
 export const INFO_ALERT_SYSTEMS = 'Eligible systems include systems connected to console.redhat.com with rhc, or Satellite with Cloud Connector.';

@@ -112,7 +112,6 @@ const RecommendationsTable = ({ page, perPage, setTotal }) => {
     setTotal(count);
 
     setShowSkeleton(false);
-    return count;
   };
 
   const getSortParams = (columnIndex: number): ThProps['sort'] => {
